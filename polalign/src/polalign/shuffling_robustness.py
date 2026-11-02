@@ -20,12 +20,13 @@ Nothing here asks a model for anything and nothing changes the AU results: it re
 from __future__ import annotations
 
 import time
+import warnings
 from pathlib import Path
 from typing import Dict, Optional, Sequence
 
 import numpy as np
 import pandas as pd
-from scipy.stats import spearmanr
+from scipy.stats import ConstantInputWarning, spearmanr
 
 from .attribution_bootstrap import COLUMNS, DEMOGRAPHIC, attribution_gap, attribution_table
 from .names import DATASET_LABEL, ordered_datasets
@@ -163,8 +164,10 @@ def compute_null(results: Dict[str, DatasetResult], permutations: int = PERMUTAT
         gap_rows.append(_gap(dataset, table, chance, n_perm, reps, seed, reference_gap.loc[dataset]))
         checks.append({"dataset": dataset, "polarized texts with >= 4 ratings": len(table), "permutations": n_perm})
     per_char = pd.DataFrame(per_char)
-    corr = pd.DataFrame([{"measure": f"n_groups vs {name}", "spearman": round(float(spearmanr(per_char["n_groups"], per_char[column]).statistic), 3), "characteristics": len(per_char)}
-                         for name, column in (("observed %", "observed_pct"), ("chance %", "chance_mean_pct"))])
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", ConstantInputWarning)          # a constant column (every characteristic has 2 groups, for example) has no correlation: the value is NaN
+        corr = pd.DataFrame([{"measure": f"n_groups vs {name}", "spearman": round(float(spearmanr(per_char["n_groups"], per_char[column]).statistic), 3), "characteristics": len(per_char)}
+                             for name, column in (("observed %", "observed_pct"), ("chance %", "chance_mean_pct"))])
     return {"per_characteristic": per_char, "gap": pd.DataFrame(gap_rows), "per_pair": pd.concat(pairs, ignore_index=True), "correlation": corr, "checks": pd.DataFrame(checks)}
 
 
