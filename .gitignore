@@ -20,6 +20,7 @@ datasets/popquorn/
 datasets/kumar/
 datasets/dices/
 datasets/popquorn/
+recovery
 
 # local only, not part of the repository
 temp_old_results/
