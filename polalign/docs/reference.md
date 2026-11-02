@@ -1,4 +1,4 @@
-# perspective_audit
+# polalign
 
 Tools to audit **whose perspective** a toxicity rating reflects, in two parts that feed each other:
 
@@ -12,7 +12,7 @@ Tools to audit **whose perspective** a toxicity rating reflects, in two parts th
    sensitivity** check (the same texts, the question reworded) and **sociodemographic (SCD) prompting** (the model answers as
    a person of each annotator group).
 
-Everything is a Python package (`src/perspective_audit`). This page is the full reference; start with the [README](../../README.md) and the nine step-by-step tutorials in this folder (and [parameters.md](parameters.md) for every setting). The notebook that rebuilds the paper is `paper/notebooks/Datasets.ipynb` in the repository and is not part of the package.
+Everything is a Python package (`src/polalign`). This page is the full reference; start with the [README](../../README.md) and the nine step-by-step tutorials in this folder (and [parameters.md](parameters.md) for every setting). The notebook that rebuilds the paper is `paper/notebooks/Datasets.ipynb` in the repository and is not part of the package.
 
 - [Install](#install) · [Data](#data) · [Quick start](#quick-start) · [The AU rule](#the-au-rule)
 - [Datasets](#datasets) · [Adding your own dataset](#adding-your-own-dataset) · [Saving the AU texts](#saving-the-au-texts)
@@ -28,7 +28,7 @@ Everything is a Python package (`src/perspective_audit`). This page is the full 
 Python 3.9 or newer.
 
 ```bash
-cd perspective_audit
+cd polalign
 python -m venv .venv                 # optional but recommended
 .venv\Scripts\activate               # Windows   (Linux/macOS: source .venv/bin/activate)
 pip install -e ".[all-models,test]"
@@ -52,7 +52,7 @@ register that environment as a kernel once:
 
 ```bash
 pip install ipykernel
-python -m ipykernel install --user --name perspective_audit
+python -m ipykernel install --user --name polalign
 ```
 
 The first cell of the notebook checks that the package can be imported and tells you what to do if it cannot.
@@ -60,15 +60,15 @@ The first cell of the notebook checks that the package can be imported and tells
 ## Data
 
 The raw datasets are **not in the repository** (some are hundreds of MB). Each dataset description in
-`src/perspective_audit/datasets/<name>.py` says where its loader looks. `find_root()` finds the repository root by looking, from the
-working directory upwards, for a folder named `datasets`; set the environment variable `PERSPECTIVE_AUDIT_ROOT` to point elsewhere (`THESIS_ROOT` still works).
+`src/polalign/datasets/<name>.py` says where its loader looks. `find_root()` finds the repository root by looking, from the
+working directory upwards, for a folder named `datasets`; set the environment variable `POLALIGN_ROOT` to point elsewhere (`THESIS_ROOT` still works).
 
 | dataset | file the loader reads | where it comes from |
 |---|---|---|
 | POPQUORN | `<root>/datasets/popquorn/popquorn.csv` | the POPQUORN release |
 | Kumar et al. | `<root>/datasets/kumar/toxicity_ratings.json` (about 434 MB) | the Kumar et al. toxicity ratings release |
 | Measuring Hate Speech | `<root>/datasets/mhs/train.parquet` if it exists, **otherwise downloaded** from Hugging Face (`ucberkeley-dlab/measuring-hate-speech`) | Hugging Face |
-| Attitudes | `<root>/Thesis/Code/attitudes_embedded.csv`, or the path in `PERSPECTIVE_AUDIT_ATTITUDES_FILE` | the Attitudes data; **note:** despite the `.csv` name the file is a pickled `DataFrame`, and it is read with `pandas.read_pickle` |
+| Attitudes | `<root>/Thesis/Code/attitudes_embedded.csv`, or the path in `POLALIGN_ATTITUDES_FILE` | the Attitudes data; **note:** despite the `.csv` name the file is a pickled `DataFrame`, and it is read with `pandas.read_pickle` |
 
 Only read pickles from sources you trust. The stage that annotates texts with models does **not** need any raw dataset: it reads the
 table written by the AU stage (`new_results/aposteriori_for_models.csv`).
@@ -78,7 +78,7 @@ table written by the AU stage (`new_results/aposteriori_for_models.csv`).
 ### 1. Find the AU texts of a dataset
 
 ```python
-from perspective_audit import SPECS, find_root, run_dataset
+from polalign import SPECS, find_root, run_dataset
 
 ROOT = find_root()
 popquorn = run_dataset(SPECS["popquorn"], ROOT)
@@ -97,7 +97,7 @@ and returns a `DatasetResult`.
 ### 2. Save them
 
 ```python
-from perspective_audit import save_au_tables
+from polalign import save_au_tables
 
 save_au_tables({"popquorn": popquorn.au}, ROOT / "new_results")
 ```
@@ -105,7 +105,7 @@ save_au_tables({"popquorn": popquorn.au}, ROOT / "new_results")
 ### 3. Annotate them with a model
 
 ```python
-from perspective_audit import ModelHub, annotate, load_model_inputs
+from polalign import ModelHub, annotate, load_model_inputs
 
 inputs = load_model_inputs(ROOT / "new_results" / "aposteriori_for_models.csv")
 hub = ModelHub.from_env()                      # reads your keys, see "API keys"
@@ -128,7 +128,7 @@ The tutorial [05_llm_annotation](05_llm_annotation.md) does exactly this, one mo
 
 ## The AU rule
 
-Implemented in `perspective_audit.unimodality` (`Unimodality`, `PrunedAU`, `dfu_of_hist`).
+Implemented in `polalign.unimodality` (`Unimodality`, `PrunedAU`, `dfu_of_hist`).
 
 A text is **AU for a dimension** when all of these hold:
 
@@ -150,7 +150,7 @@ of a text.
 You can also use the tool directly on any long table of ratings:
 
 ```python
-from perspective_audit import Unimodality
+from polalign import Unimodality
 
 tool = Unimodality(scale=range(1, 6), min_ratings=2, min_groups=2, toxic_threshold=3, tolerance=0.0)
 result = tool.au_pruned(table, "item_id", "rating", "gender", min_au_texts=10, keep_cols=["text"])
@@ -178,7 +178,7 @@ annotator attribute maps to groups.
 
 ```python
 import pandas as pd
-from perspective_audit import DatasetSpec, run_dataset
+from polalign import DatasetSpec, run_dataset
 
 def load(root):
     raw = pd.read_csv(root / "datasets" / "mine" / "ratings.csv")
@@ -244,7 +244,7 @@ save_au_tables(
 ## Describing a dataset (EDA)
 
 ```python
-from perspective_audit import eda_tables, save_eda
+from polalign import eda_tables, save_eda
 
 tables = eda_tables(result)                    # result = run_dataset(...); a dict of tables
 save_eda(result, "new_results/popquorn/eda")   # every table as csv, every figure as png (figures need `pip install -e ".[plots]"`)
@@ -330,7 +330,7 @@ The keys do **not** choose the models; they only decide which of the chosen mode
 order:
 
 1. names passed in code: `ModelHub.from_env(["chatgpt", "gemini"])`;
-2. otherwise `PERSPECTIVE_AUDIT_MODELS=chatgpt,gemini` in `.env` or the environment;
+2. otherwise `POLALIGN_MODELS=chatgpt,gemini` in `.env` or the environment;
 3. otherwise every model in `DEFAULT_CONFIGS` that is `enabled`: `chatgpt`, `llama`, `gemini`, `mistral`, `deepseek` (not `grok`).
 
 An unknown name raises an error that lists the known ones. Then use `hub["chatgpt"]` for one model, or loop over `hub`.
@@ -360,7 +360,7 @@ The supported suffixes are `_MODEL`, `_BASE_URL`, `_API_KEY_ENV`, `_TEMPERATURE`
 **Add a model.** Anything with an OpenAI-style chat API (Together, Groq, vLLM, an Ollama model, ...) needs only a config:
 
 ```python
-from perspective_audit import ModelConfig, ModelHub
+from polalign import ModelConfig, ModelHub
 
 configs = {"qwen": ModelConfig("qwen", "openai_compatible", "qwen2.5:7b-instruct",
                                api_key_env=None, base_url="http://localhost:11434/v1")}
@@ -437,7 +437,7 @@ the run stops with an `AnnotationError` and the reply is kept in the raw file so
 **Looking at the results**
 
 ```python
-from perspective_audit import ensemble, inspect_run, progress, collect_runs
+from polalign import ensemble, inspect_run, progress, collect_runs
 
 inspect_run(out_dir, "chatgpt", "baseline")       # per dataset: texts, mean score, share called toxic, batches asked again / not parsed
 ensemble(out_dir, "popquorn", "baseline")         # the models side by side (also written to all_models.csv)
@@ -449,7 +449,7 @@ collect_runs(out_dir, "baseline")                 # every saved row of a run, in
 in its own run, and compare it with the baseline answers for the same texts:
 
 ```python
-from perspective_audit import sample_inputs
+from polalign import sample_inputs
 
 subset = sample_inputs(inputs, 50, seed=42)        # 50 random texts per dataset; the same n and seed give the same texts
 annotate(model, subset, out_dir, prompt=other_prompt, run="prompt_sensitivity")      # -> <dataset>/prompt_sensitivity/, next to <dataset>/baseline/
@@ -465,7 +465,7 @@ a person of **each** of those groups, and the answers are kept together. The sam
 separate calls, each with only the groups of its own dimension.
 
 ```python
-from perspective_audit import annotate_personas, load_persona_inputs, inspect_personas, collect_persona_runs, sample_inputs
+from polalign import annotate_personas, load_persona_inputs, inspect_personas, collect_persona_runs, sample_inputs
 
 scd_inputs = load_persona_inputs("new_results/aposteriori_for_models.csv")   # {dataset: one row per (text, dimension) with its groups}
 scd_inputs = sample_inputs(scd_inputs, 20, seed=42)                          # optional: a random pilot of 20 rows per dataset
@@ -514,7 +514,7 @@ to both groups). This is a property of the design; a single-persona prompt on a 
 models, a model and a group of people). 1 means perfect agreement, 0 means no more than chance, and a missing value is left out:
 
 ```python
-from perspective_audit import cohen_kappa, weighted_kappa, spearman
+from polalign import cohen_kappa, weighted_kappa, spearman
 
 weighted_kappa(scores_a, scores_b)        # scores 1-5: a big disagreement counts more than a small one (quadratic weights)
 cohen_kappa(labels_a, labels_b)           # labels such as "toxic" / "civil", corrected for the agreement chance alone would give
@@ -537,7 +537,7 @@ temperature costs another full call.
 
 ## Other ways to prompt
 
-These are in `perspective_audit.scoring` and are independent of `annotate`.
+These are in `polalign.scoring` and are independent of `annotate`.
 
 **`score_texts(model, texts, prompt=None, batch_size=10, parse_retries=2)`** scores a list of texts and returns a table (`batch`,
 `text_index`, `text`, `score`, `label`). It uses a `ScoringPrompt`, which has the wording of the paper (`"v1"`) and a variant that also states the
@@ -574,12 +574,12 @@ wording (`"v1"`) and a short one (`"compact"`).
 
 | symptom | cause and fix |
 |---|---|
-| `ModuleNotFoundError: perspective_audit` in the notebook | the notebook kernel's Python does not have the package. Select the right kernel, or `pip install -e .` in that Python |
+| `ModuleNotFoundError: polalign` in the notebook | the notebook kernel's Python does not have the package. Select the right kernel, or `pip install -e .` in that Python |
 | `TypeError: annotate() got an unexpected keyword argument ...` or a function that "does not exist" after you changed the code | the kernel loaded the package before the change. **Restart the kernel** and run the setup cell again |
 | `NameError: name 'all_models' is not defined` | the setup cell of the notebook has not been run in this kernel. Run it first |
 | `chat_api is not set (looked in ...)` | the key is missing. Add it to `.env`, or set the variable; `hub.missing()` lists what is missing |
 | `ModuleNotFoundError: openai` (or `google`) | the extra is not installed: `pip install -e ".[all-models]"` |
-| `FileNotFoundError: Could not find a folder containing 'datasets'` | run from inside the repository, or set `PERSPECTIVE_AUDIT_ROOT` |
+| `FileNotFoundError: Could not find a folder containing 'datasets'` | run from inside the repository, or set `POLALIGN_ROOT` |
 | `AnnotationError: ... expected 10 scores, received 9` | the model's reply did not have one `score=<n>` line per text. Open the reply in `raw/<model>.raw.jsonl`; usually the prompt needs to be stricter, or the model adds text around the scores |
 | `AnnotationError: saved batch N holds other texts than the input` | the input changed since this run was started. Use a new `run` name |
 | `AnnotationError: ... no valid score for every group of [...]` (SCD) | the reply was cut off, not JSON, or missed or renamed a group. Open it in `raw/<model>.raw.jsonl`; the prompt must ask for the groups exactly as written |
@@ -591,11 +591,11 @@ wording (`"v1"`) and a short one (`"compact"`).
 ## Package layout
 
 ```
-perspective_audit/
+polalign/
   README.md                     the PyPI readme
   docs/                         one short document per step (01_data ... 09_alignment) and this reference
   notebooks/                    one runnable notebook per step, all on the built-in toy dataset
-  src/perspective_audit/
+  src/polalign/
     unimodality.py              DFU and the AU rule with the 10-text rule (Unimodality, PrunedAU)
     spec.py, datasets/          DatasetSpec and the four datasets of the paper
     pipeline.py, export.py      clean, run_dataset, DatasetResult; save_au_tables
@@ -640,5 +640,5 @@ tables, the toy dataset with its rule parameters, and `compare_prompts`.
 - **Key variable names** (`chat_api`, `gemini_key`, ...) are historical. Rename them with `<NAME>_API_KEY_ENV`.
 - **SCD prompting** (`annotate_personas`) rates all the groups of a dimension in one call, so the personas can influence each other, and its
   reply format is fixed (JSON keyed by group). The older `score_personas` takes a `PersonaPrompt` object and saves no files.
-- **The Attitudes loader reads a pickle** from a fixed location (or `PERSPECTIVE_AUDIT_ATTITUDES_FILE`); the other loaders need the files
+- **The Attitudes loader reads a pickle** from a fixed location (or `POLALIGN_ATTITUDES_FILE`); the other loaders need the files
   of the [Data](#data) section in place.

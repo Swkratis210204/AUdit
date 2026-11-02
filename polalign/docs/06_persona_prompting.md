@@ -4,7 +4,7 @@ The default prompt asks "is this text toxic?". **Persona prompting (SCD)** asks 
 a model's side is: if the labels follow the persona, the side can be moved. We use it as a diagnostic and not as a mitigation.
 
 ```python
-from perspective_audit import annotate_personas, load_persona_inputs
+from polalign import annotate_personas, load_persona_inputs
 
 inputs = load_persona_inputs("results/aposteriori_for_models.csv")     # one row per (text, characteristic) with the groups of that characteristic
 

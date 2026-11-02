@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from paper.model_comparison import save_model_comparison
-from perspective_audit import compare_models
+from polalign import compare_models
 
 IDS = [f"t{i}" for i in range(8)]
 SCORES = {"chatgpt": [1, 2, 3, 4, 5, 1, 2, 5], "deepseek": [1, 2, 3, 4, 5, 1, 2, 5], "gemini": [5, 4, 3, 2, 1, 5, 4, 1], "mistral": [4] * 8}

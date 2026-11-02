@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from perspective_audit import read_au_csv, save_au_tables
+from polalign import read_au_csv, save_au_tables
 
 
 def au_table(dataset, n_per_dimension, dimensions=("gender", "age")):

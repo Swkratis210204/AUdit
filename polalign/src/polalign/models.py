@@ -211,7 +211,7 @@ def apply_env_overrides(config: ModelConfig, env: Env) -> ModelConfig:
 
 # ---- all the models ----------------------------------------------------------------------------------------
 class ModelHub:
-    """Several models by name. ``ModelHub.from_env()`` builds the default ones; ``PERSPECTIVE_AUDIT_MODELS=chatgpt,llama`` selects."""
+    """Several models by name. ``ModelHub.from_env()`` builds the default ones; ``POLALIGN_MODELS=chatgpt,llama`` selects."""
 
     def __init__(self, models: Iterable[Model]):
         self._models: Dict[str, Model] = {m.name: m for m in models}
@@ -222,7 +222,7 @@ class ModelHub:
         env = env if env is not None else Env.load()
         configs = configs or DEFAULT_CONFIGS
         if names is None:
-            chosen = env.get("PERSPECTIVE_AUDIT_MODELS")
+            chosen = env.get("POLALIGN_MODELS")
             names = [n.strip() for n in chosen.split(",") if n.strip()] if chosen else [n for n, c in configs.items() if c.enabled]
         unknown = [n for n in names if n not in configs]
         if unknown:

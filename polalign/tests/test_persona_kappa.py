@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from perspective_audit import compute_persona_kappa, save_persona_kappa
+from polalign import compute_persona_kappa, save_persona_kappa
 from test_kappa_groups import build, toy_result
 
 

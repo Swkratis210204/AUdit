@@ -4,9 +4,9 @@ import json
 import pandas as pd
 import pytest
 
-from perspective_audit import Env, Model, ModelConfig
-from perspective_audit.annotation import AnnotationError
-from perspective_audit.persona_annotation import (annotate_personas, collect_persona_runs, group_order, inspect_personas,
+from polalign import Env, Model, ModelConfig
+from polalign.annotation import AnnotationError
+from polalign.persona_annotation import (annotate_personas, collect_persona_runs, group_order, inspect_personas,
                                                   load_persona_inputs, persona_long)
 
 

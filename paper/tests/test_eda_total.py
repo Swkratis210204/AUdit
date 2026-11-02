@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from perspective_audit import DatasetSpec, run_dataset
+from polalign import DatasetSpec, run_dataset
 from paper.eda_total import ratings_per_text, save_total_eda
 from paper.eda_total import ratings_per_text_lines, rating_shares, toxicity_shares
 

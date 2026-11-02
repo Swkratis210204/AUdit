@@ -26,9 +26,9 @@ def _as_list(x):
 
 
 def load(root: Path, path: Optional[Path] = None) -> pd.DataFrame:
-    """One row per rating. ``path`` (or ``PERSPECTIVE_AUDIT_ATTITUDES_FILE``) overrides the default location.
+    """One row per rating. ``path`` (or ``POLALIGN_ATTITUDES_FILE``) overrides the default location.
     NOTE: despite its .csv extension, the file is a pickled DataFrame."""
-    path = Path(path or os.environ.get("PERSPECTIVE_AUDIT_ATTITUDES_FILE") or Path(root) / "Thesis" / "Code" / "attitudes_embedded.csv")
+    path = Path(path or os.environ.get("POLALIGN_ATTITUDES_FILE") or Path(root) / "Thesis" / "Code" / "attitudes_embedded.csv")
     raw = pd.read_pickle(path)
     lists = {name: raw[col].map(_as_list) for name, col in PARALLEL.items()}
     lengths = pd.DataFrame({name: s.map(len) for name, s in lists.items()})

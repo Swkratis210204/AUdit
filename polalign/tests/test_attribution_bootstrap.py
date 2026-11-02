@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 
-from perspective_audit import DatasetSpec, attribution_gap, attribution_table, bootstrap_gap, run_dataset
+from polalign import DatasetSpec, attribution_gap, attribution_table, bootstrap_gap, run_dataset
 
 
 def toy(name, extra_texts=0):

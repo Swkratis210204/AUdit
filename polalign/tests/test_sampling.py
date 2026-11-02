@@ -1,8 +1,8 @@
 """Tests of the minimal cover sample."""
 import pandas as pd
 
-from perspective_audit import save_au_tables
-from perspective_audit.sampling import appearances, cover_per_dimension, minimal_cover
+from polalign import save_au_tables
+from polalign.sampling import appearances, cover_per_dimension, minimal_cover
 
 
 def table(counts, dimension="race"):

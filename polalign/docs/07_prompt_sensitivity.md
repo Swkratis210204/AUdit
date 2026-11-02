@@ -4,7 +4,7 @@ Does the model's answer depend on how you *word* the question? Run the same text
 reply format) and compare the runs. If a rewording changes the labels, a result that you report belongs to the prompt and not only to the model.
 
 ```python
-from perspective_audit import annotate, compare_prompts, sample_inputs
+from polalign import annotate, compare_prompts, sample_inputs
 
 sample = sample_inputs(inputs, 50, seed=42)          # the same random texts for every prompt and model
 annotate(model, sample, "results", prompt=baseline_prompt, run="baseline")

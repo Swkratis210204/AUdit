@@ -1,5 +1,5 @@
 """save_prompts keeps one markdown file with a section per prompt, whichever experiment writes it."""
-from perspective_audit import save_prompts
+from polalign import save_prompts
 
 
 def test_sections_are_added_replaced_and_kept(tmp_path):

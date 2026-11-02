@@ -1,4 +1,4 @@
-"""The figure and the files of the paper for the agreement between the models (section 7.4). The numbers come from ``perspective_audit.compare_models``."""
+"""The figure and the files of the paper for the agreement between the models (section 7.4). The numbers come from ``polalign.compare_models``."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -7,9 +7,9 @@ from typing import Dict, Sequence
 import numpy as np
 import pandas as pd
 
-from perspective_audit.kappa_groups import MODELS
-from perspective_audit.model_comparison import MEASURES, compare_models
-from perspective_audit.names import DATASET_LABEL, DATASET_ORDER, MODEL_NAME
+from polalign.kappa_groups import MODELS
+from polalign.model_comparison import MEASURES, compare_models
+from polalign.names import DATASET_LABEL, DATASET_ORDER, MODEL_NAME
 
 README = """# Agreement between the models (section 7.4)
 

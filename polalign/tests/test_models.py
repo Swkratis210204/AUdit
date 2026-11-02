@@ -2,9 +2,9 @@
 import pandas as pd
 import pytest
 
-from perspective_audit import (Env, Model, ModelConfig, ModelError, ModelHub, PersonaPrompt, ScoringPrompt, label_from_score,
+from polalign import (Env, Model, ModelConfig, ModelError, ModelHub, PersonaPrompt, ScoringPrompt, label_from_score,
                          score_personas, score_texts)
-from perspective_audit.env import parse_dotenv
+from polalign.env import parse_dotenv
 
 
 class Stub:
@@ -84,7 +84,7 @@ def test_hub_from_env_selects_and_overrides():
     assert hub["mistral"].config.model_id == "mistral-large" and hub["mistral"].config.max_tokens == 300
     assert hub["llama"].config.base_url == "http://other:1/v1"
     assert hub.available() == ["chatgpt", "llama"] and "gemini" in hub.missing() and "gemini_key" in hub.missing()["gemini"]
-    assert ModelHub.from_env(env=Env({"PERSPECTIVE_AUDIT_MODELS": "llama, grok"})).names == ["llama", "grok"]
+    assert ModelHub.from_env(env=Env({"POLALIGN_MODELS": "llama, grok"})).names == ["llama", "grok"]
     with pytest.raises(KeyError):
         ModelHub.from_env(["nope"], env=env)
 

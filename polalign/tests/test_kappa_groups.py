@@ -5,8 +5,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from perspective_audit import DatasetSpec, compute_kappa, run_dataset, save_kappa
-from perspective_audit.kappa_groups import _constant_summary, _kappa
+from polalign import DatasetSpec, compute_kappa, run_dataset, save_kappa
+from polalign.kappa_groups import _constant_summary, _kappa
 
 N = 12                                    # texts t0..t5: men civil, women toxic; texts t6..t11: men toxic, women civil
 

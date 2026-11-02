@@ -16,12 +16,12 @@ JSON_COLUMNS = ("kept_groups", "group_sizes", "group_label")      # columns of a
 
 def find_root(marker: str = "datasets", start: Optional[Path] = None) -> Path:
     """The repository root: the first folder, from ``start`` (default: working directory) upwards, that contains ``marker``.
-    ``PERSPECTIVE_AUDIT_ROOT`` (or the older ``THESIS_ROOT``) in the environment overrides the starting point."""
-    here = Path(os.environ.get("PERSPECTIVE_AUDIT_ROOT") or os.environ.get("THESIS_ROOT") or start or Path.cwd()).resolve()
+    ``POLALIGN_ROOT`` (or the older ``THESIS_ROOT``) in the environment overrides the starting point."""
+    here = Path(os.environ.get("POLALIGN_ROOT") or os.environ.get("THESIS_ROOT") or start or Path.cwd()).resolve()
     for folder in (here, *here.parents):
         if (folder / marker).is_dir():
             return folder
-    raise FileNotFoundError(f"Could not find a folder containing '{marker}' above {here}; set PERSPECTIVE_AUDIT_ROOT.")
+    raise FileNotFoundError(f"Could not find a folder containing '{marker}' above {here}; set POLALIGN_ROOT.")
 
 
 def ensure_dir(path: Path) -> Path:

@@ -18,14 +18,14 @@ from typing import Dict
 import numpy as np
 import pandas as pd
 
-from perspective_audit.pipeline import DatasetResult
+from polalign.pipeline import DatasetResult
 
 __all__ = ["rating_shares", "toxicity_shares", "ratings_per_text", "ratings_per_text_lines", "save_total_eda",
            "read_group_tables", "toxicity_by_group", "save_toxicity_by_dimension", "save_appendix_figures"]
 
 MIN_RATINGS = 4                                    # a text with fewer ratings cannot be AU (2 + 2)
 BLUE, RED = "#4C72B0", "#C44E52"
-from perspective_audit.names import DATASET_COLOR, DATASET_LABEL, DATASET_ORDER, ordered_datasets as _ordered      # noqa: E402,F401
+from polalign.names import DATASET_COLOR, DATASET_LABEL, DATASET_ORDER, ordered_datasets as _ordered      # noqa: E402,F401
 
 
 def _save_figure(plt, fig, folder: Path, stem: str, written: dict, formats=("png",), rect=None) -> None:

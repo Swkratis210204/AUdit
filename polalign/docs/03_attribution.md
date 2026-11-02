@@ -29,7 +29,7 @@ result.au                             # the final attributed texts, one row per 
 text (group sizes fixed) and reruns the AU test, to see how many texts a characteristic attributes by chance.
 
 ```python
-from perspective_audit import attribution_gap, compute_null
+from polalign import attribution_gap, compute_null
 
 attribution_gap({"mydata": result}, reps=10_000)
 compute_null({"mydata": result}, permutations=1_000)

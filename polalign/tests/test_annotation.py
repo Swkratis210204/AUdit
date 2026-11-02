@@ -4,8 +4,8 @@ import json
 import pandas as pd
 import pytest
 
-from perspective_audit import Env, Model, ModelConfig, ModelError
-from perspective_audit.annotation import (AnnotationError, annotate as _annotate, collect_runs, load_model_inputs, progress,
+from polalign import Env, Model, ModelConfig, ModelError
+from polalign.annotation import (AnnotationError, annotate as _annotate, collect_runs, load_model_inputs, progress,
                                           sample_inputs)
 
 
@@ -119,7 +119,7 @@ def test_limit_run_name_log_and_progress(tmp_path):
 
 
 def test_inspect_run_shows_scores_and_retried_batches(tmp_path):
-    from perspective_audit.annotation import inspect_run
+    from polalign.annotation import inspect_run
 
     class Flaky(Scorer):                                      # the first reply of the first batch has too few scores
         def complete(self, prompt, max_tokens, temperature):
@@ -143,7 +143,7 @@ def test_load_model_inputs_keeps_each_text_once(tmp_path):
 
 
 def test_each_dataset_folder_has_one_file_per_model_and_one_with_all_of_them(tmp_path):
-    from perspective_audit.annotation import ensemble
+    from polalign.annotation import ensemble
 
     annotate(model(Scorer(score=5), "chatgpt"), inputs(), tmp_path)
     annotate(model(Scorer(score=2), "mistral"), inputs(), tmp_path)

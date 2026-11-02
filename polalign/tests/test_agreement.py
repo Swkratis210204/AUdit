@@ -3,7 +3,7 @@ import math
 
 import pytest
 
-from perspective_audit import cohen_kappa, spearman, weighted_kappa
+from polalign import cohen_kappa, spearman, weighted_kappa
 
 
 def test_cohen_kappa_of_labels():

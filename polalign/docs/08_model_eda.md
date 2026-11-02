@@ -5,7 +5,7 @@
 Before looking at alignment with the groups, look at the models themselves. Nothing here calls a model: it reads the default-prompt ratings you saved (`<dataset>/baseline/<model>.csv`).
 
 ```python
-from perspective_audit import compare_models, model_eda, save_model_eda
+from polalign import compare_models, model_eda, save_model_eda
 
 tables = model_eda("results", datasets=["mydata"], models=["chatgpt", "gemini"])
 tables["scores"]     # how each model uses the 1-5 scale

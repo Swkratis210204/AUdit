@@ -13,7 +13,7 @@
 | `text_length` | words per text |
 
 ```python
-from perspective_audit import eda_tables, save_eda
+from polalign import eda_tables, save_eda
 
 tables = eda_tables(result)
 save_eda(result, "eda_mydata")      # the tables as csv and the figures as png (needs matplotlib)

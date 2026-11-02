@@ -3,12 +3,19 @@ requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "perspective-audit"
+name = "polalign"
 version = "1.0.0"
 readme = "README.md"
-description = "A-posteriori unimodality (AU) of annotator subgroups, built on the normalized distance from unimodality (ndfu)"
+license = {text = "MIT"}
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+description = "An audit framework for LLM alignment with human subgroups, based on polarization"
 requires-python = ">=3.9"
-keywords = ["polarization", "annotator disagreement", "LLM", "toxicity", "unimodality", "perspectivism"]
+keywords = ["polarization", "LLM alignment", "subgroups", "annotator disagreement", "audit", "toxicity", "unimodality", "perspectivism"]
 dependencies = [
     "numpy",
     "pandas",
@@ -26,9 +33,9 @@ oci = ["oci"]                  # Grok on Oracle OCI
 all-models = ["openai", "google-genai", "oci"]
 
 [project.urls]
-Homepage = "https://github.com/Swkratis210204/llm-dfu-bias-study"
-Documentation = "https://github.com/Swkratis210204/llm-dfu-bias-study#readme"
-Repository = "https://github.com/Swkratis210204/llm-dfu-bias-study"
+Homepage = "https://github.com/Swkratis210204/polalign"
+Documentation = "https://github.com/Swkratis210204/polalign#readme"
+Repository = "https://github.com/Swkratis210204/polalign"
 
 [tool.setuptools.packages.find]
 where = ["src"]

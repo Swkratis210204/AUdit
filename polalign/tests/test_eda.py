@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from perspective_audit import DatasetSpec, eda_figures, eda_tables, run_dataset, save_eda
+from polalign import DatasetSpec, eda_figures, eda_tables, run_dataset, save_eda
 
 
 def toy():
