@@ -227,7 +227,7 @@ def mirrored_pairs(by_group: pd.DataFrame) -> pd.DataFrame:
     return by_group[by_group["mirrored"]][["dataset", "characteristic"]].drop_duplicates().reset_index(drop=True)
 
 
-def compute_kappa(results: Dict[str, DatasetResult], results_dir: Path, given: pd.DataFrame, reps: int = 10_000, seed: int = 42,
+def compute_kappa(results: Dict[str, DatasetResult], results_dir: Path, given: pd.DataFrame, reps: int = 1_000, seed: int = 42,
                   models: Sequence[str] = MODELS, prompt: str = "baseline") -> Dict[str, pd.DataFrame]:
     """The tables of one prompt and a table of checks: ``by_group``, ``gaps``, ``constant``, ``checks`` and the checks of the shares, and for ``prompt="scd"`` also
     ``prompt_change`` (the change from the default prompt to the SCD prompt). ``prompt="baseline"`` is the default prompt (section 7.2), ``"scd"`` section 7.3; both
@@ -280,7 +280,7 @@ Nothing here asks a model for anything: it reads the AU results and the labels t
   and `constant_model = True` (also inside a resample). `constant_group` flags a group whose position is the same in all its texts.
 - **small_n**: the characteristic has fewer than 10 attributed texts (Attitudes age and traditionalism; these characteristics stay in).
 - **se**: the standard error, the standard deviation (ddof = 1) of the bootstrap values of that quantity over the valid resamples (the same resamples as the percentiles).
-- **Bootstrap**: the attributed texts of a characteristic are resampled with replacement 10,000 times (seed 42); every group, model and prompt is recomputed on the same
+- **Bootstrap**: the attributed texts of a characteristic are resampled with replacement 1,000 times (seed 42); every group, model and prompt is recomputed on the same
   resamples. `ci_low` and `ci_high` are the 2.5th and 97.5th percentiles. A resample in which a group has no text has no kappa: it is counted in
   `resamples_without_value` and left out of the percentiles.
 

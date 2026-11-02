@@ -18,7 +18,7 @@ GROUP_NAME = {"millenial": "millennial"}                    # the spelling of th
 
 PROMPT_PHRASE = {("baseline",): "with the default prompt", ("scd",): "with the \\ac{SCD} prompt", ("baseline", "scd"): "with the default and the \\ac{SCD} prompt"}
 CAPTION = ("Cohen's kappa between each \\ac{LLM} and the groups of each characteristic on polarized texts attributed to it, {prompt}. "
-           "Values in parentheses are bootstrap standard errors and values in brackets 95\\% intervals from 10,000 resamples of the attributed texts.")
+           "Values in parentheses are bootstrap standard errors and values in brackets 95\\% intervals from 1,000 resamples of the attributed texts.")
 
 
 def _number(value: float) -> str:
