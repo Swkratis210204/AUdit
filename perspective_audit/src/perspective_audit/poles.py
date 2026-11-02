@@ -1,4 +1,4 @@
-"""Alignment of the models with the two poles of a polarized text (section 7.6): does the model side with the toxic pole or the civil pole when the groups split,
+"""Alignment of the models with the two poles of a polarized text: does the model side with the toxic pole or the civil pole when the groups split,
 and which group holds each pole.
 
 It reads the attributed (AU) texts with the position of each group and the default-prompt labels the models already gave, and asks nothing of a model.
@@ -14,19 +14,17 @@ refer to the same texts as the kappa tables.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, Sequence
+from typing import Dict, Optional, Sequence
 
 import numpy as np
 import pandas as pd
 
-from .eda_total import _ordered
+from .names import MODEL_NAME, ordered_datasets
 from .kappa_groups import MODELS, THRESHOLD, _attributed_rows, _interval, _model_labels, _r, _se
-from .kappa_tables import MODEL_NAME
 from .persona_annotation import collect_persona_runs
 
 __all__ = ["compute_poles", "save_poles"]
 
-EXPECTED_ATTRIBUTIONS = {"attitudes": 51, "popquorn": 183, "mhs": 105, "kumar": 65}          # attributed rows (text x characteristic) used in the paper
 SMALL = 5                                                                                  # a direction cell with fewer texts is flagged
 DISTINCT = "all (distinct texts)"
 KUMAR_GROUP_ORDER = ["politics", "gender", "race", "age", "religion"]
@@ -56,17 +54,19 @@ def _alignment_rows(dataset, dimension, model, label, split, weights, n_attr) ->
             "share_model_toxic_same": _r(row_same) if np.isfinite(row_same) else np.nan, "constant_model": bool(len(set(label)) == 1)}
 
 
-def compute_poles(results, results_dir: Path, given: pd.DataFrame, reps: int = 10_000, seed: int = 42, models: Sequence[str] = MODELS) -> Dict[str, pd.DataFrame]:
+def compute_poles(results, results_dir: Path, given: pd.DataFrame, reps: int = 10_000, seed: int = 42, models: Sequence[str] = MODELS,
+                  expected_attributions: Optional[Dict[str, int]] = None, threshold: float = THRESHOLD, small_n: int = SMALL) -> Dict[str, pd.DataFrame]:
     """``alignment``, ``groups``, ``direction`` and ``checks``. ``results`` are the AU results, ``results_dir`` holds ``<dataset>/baseline/<model>.csv``, ``given`` is
-    ``aposteriori_for_models.csv`` (for Kumar the sample of 65 attributions). Raises if the number of attributed rows differs from the paper's."""
+    ``aposteriori_for_models.csv`` (for Kumar the sample of 65 attributions). With ``expected_attributions`` (dataset -> number of attributed rows) it raises if the number differs."""
+    expected_attributions = expected_attributions or {}
     scd = collect_persona_runs(results_dir, "scd")                      # _model_labels reads both prompts; only the baseline is used here
     alignment, groups_rows, direction, checks = [], [], [], []
-    for dataset in _ordered(results):
+    for dataset in ordered_datasets(results):
         result = results[dataset]
         attributed = _attributed_rows(result, given, dataset)
-        if len(attributed) != EXPECTED_ATTRIBUTIONS.get(dataset, len(attributed)):
-            raise ValueError(f"{dataset}: {len(attributed)} attributed rows, the paper has {EXPECTED_ATTRIBUTIONS[dataset]}")
-        base = _model_labels(results_dir, dataset, models, scd)["baseline"]
+        if len(attributed) != expected_attributions.get(dataset, len(attributed)):
+            raise ValueError(f"{dataset}: {len(attributed)} attributed rows, expected {expected_attributions[dataset]}")
+        base = _model_labels(results_dir, dataset, models, scd, need_scd=False)["baseline"]
         distinct = {}                                                   # item -> split under at least one characteristic
         for dimension in sorted(attributed["dimension"].unique(), key=list(result.spec.dimensions).index):
             part = attributed[attributed["dimension"] == dimension].reset_index(drop=True)
@@ -81,7 +81,7 @@ def compute_poles(results, results_dir: Path, given: pd.DataFrame, reps: int = 1
             for item, flag in zip(part["item_id"], split):
                 distinct[item] = max(distinct.get(item, 0.0), flag)
             counts = np.random.default_rng(seed).multinomial(n, np.full(n, 1.0 / n), size=reps).astype(float)
-            labels = {m: (base[m].loc[part["item_id"]].to_numpy() >= THRESHOLD).astype(float) for m in models}
+            labels = {m: (base[m].loc[part["item_id"]].to_numpy() >= threshold).astype(float) for m in models}
             for m in models:
                 alignment.append(_alignment_rows(dataset, dimension, m, labels[m], split, counts, n))
             for j, name in enumerate(names):
@@ -96,15 +96,15 @@ def compute_poles(results, results_dir: Path, given: pd.DataFrame, reps: int = 1
                     for pole, mask, agree in (("toxic", at_toxic, labels[m]), ("civil", at_civil, 1 - labels[m])):
                         k = int(mask.sum())
                         direction.append({"dataset": dataset, "characteristic": dimension, "group": name, "model": m, "group_pole": pole, "n_texts": k,
-                                          "agreement": _r((mask * agree).sum() / k) if k else np.nan, "small_n": k < SMALL})
+                                          "agreement": _r((mask * agree).sum() / k) if k else np.nan, "small_n": k < small_n})
         # the same per dataset, each distinct text once (split under at least one characteristic)
         items = list(distinct)
         flag = np.array([distinct[i] for i in items])
         counts = np.random.default_rng(seed).multinomial(len(items), np.full(len(items), 1.0 / len(items)), size=reps).astype(float)
         for m in models:
-            label = (base[m].loc[items].to_numpy() >= THRESHOLD).astype(float)
+            label = (base[m].loc[items].to_numpy() >= threshold).astype(float)
             alignment.append(_alignment_rows(dataset, DISTINCT, m, label, flag, counts, len(items)))
-        checks.append({"dataset": dataset, "attributed rows": len(attributed), "paper": EXPECTED_ATTRIBUTIONS.get(dataset), "distinct texts": len(items), "split texts (any characteristic)": int(flag.sum())})
+        checks.append({"dataset": dataset, "attributed rows": len(attributed), "paper": expected_attributions.get(dataset), "distinct texts": len(items), "split texts (any characteristic)": int(flag.sum())})
     return {"alignment": pd.DataFrame(alignment), "groups": pd.DataFrame(groups_rows), "direction": pd.DataFrame(direction), "checks": pd.DataFrame(checks)}
 
 
@@ -158,7 +158,7 @@ def summary_text(tables: Dict[str, pd.DataFrame], reps: int, seed: int) -> str:
     kumar = tables["alignment"][tables["alignment"]["dataset"] == "kumar"]
     L += _dataset_section(tables, "kumar", ["politics"])
     L += ["## 2. Other datasets", ""]
-    for dataset in [d for d in _ordered(tables["alignment"]["dataset"].unique()) if d != "kumar"]:
+    for dataset in [d for d in ordered_datasets(tables["alignment"]["dataset"].unique()) if d != "kumar"]:
         political = [c for c in tables["alignment"][tables["alignment"]["dataset"] == dataset]["characteristic"].unique() if c in ("politics", "ideology")]
         directions = political or [c for c in tables["alignment"][tables["alignment"]["dataset"] == dataset]["characteristic"].unique() if c != DISTINCT]
         L += [f"### {dataset}", ""] + _dataset_section(tables, dataset, directions)

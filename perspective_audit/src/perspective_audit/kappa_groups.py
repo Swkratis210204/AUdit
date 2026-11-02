@@ -1,4 +1,4 @@
-"""Section 7.2: Cohen's kappa between each model's labels and each annotator group's position on the attributed (AU) texts, with bootstrap intervals.
+"""Cohen's kappa between each model's labels and each annotator group's position on the attributed (AU) texts, with bootstrap intervals.
 Nothing here asks a model for anything: it reads the AU results and the labels the models already gave (the baseline prompt and the SCD prompt).
 
 For every dataset, characteristic, group, model and prompt:
@@ -26,7 +26,7 @@ from typing import Dict, Optional, Sequence
 import numpy as np
 import pandas as pd
 
-from .eda_total import _ordered
+from .names import ordered_datasets
 from .persona_annotation import collect_persona_runs
 from .pipeline import DatasetResult
 
@@ -37,8 +37,6 @@ PROMPTS = ["baseline", "scd"]
 DEMOGRAPHIC = ("gender", "race", "age")
 THRESHOLD = 3                    # a rating at or above this is toxic (the humans' and the models')
 SMALL = 10                       # a characteristic with fewer attributed texts than this is flagged small_n
-EXPECTED_DISTINCT = {"attitudes": 41, "popquorn": 154, "mhs": 95, "kumar": 5209}          # distinct attributed texts of the full AU results
-EXPECTED_SAMPLE_ROWS = {"kumar": 65}
 
 
 def _kappa(weights: np.ndarray, position: np.ndarray, label: np.ndarray) -> np.ndarray:
@@ -99,14 +97,17 @@ def _attributed_rows(result: DatasetResult, given: Optional[pd.DataFrame], datas
     return rows.sort_values(["dimension", "item_id"], kind="stable").reset_index(drop=True)
 
 
-def _model_labels(results_dir: Path, dataset: str, models: Sequence[str], scd: pd.DataFrame) -> dict:
-    """The saved 1-5 ratings: ``baseline[model]`` is a Series by item id, ``scd[model]`` a Series by (dimension, item id, group)."""
+def _model_labels(results_dir: Path, dataset: str, models: Sequence[str], scd: pd.DataFrame, need_scd: bool = True) -> dict:
+    """The saved 1-5 ratings: ``baseline[model]`` is a Series by item id, ``scd[model]`` a Series by (dimension, item id, group).
+    With ``need_scd=False`` the SCD answers are not read (they may not exist: only the default prompt was run)."""
     out = {"baseline": {}, "scd": {}}
     for model in models:
         path = Path(results_dir) / dataset / "baseline" / f"{model}.csv"
         if not path.exists():
             raise FileNotFoundError(f"no baseline file for {dataset}/{model}: {path}")
         out["baseline"][model] = pd.read_csv(path, dtype={"item_id": str}).drop_duplicates("item_id").set_index("item_id")["score"]
+        if not need_scd:
+            continue
         part = scd[(scd["dataset"] == dataset) & (scd["model"] == model)]
         if part.empty:
             raise FileNotFoundError(f"no scd answers for {dataset}/{model}")
@@ -114,7 +115,7 @@ def _model_labels(results_dir: Path, dataset: str, models: Sequence[str], scd: p
     return out
 
 
-def _block(rows: pd.DataFrame, dimension: str, labels: dict, models: Sequence[str], dataset: str) -> dict:
+def _block(rows: pd.DataFrame, dimension: str, labels: dict, models: Sequence[str], dataset: str, threshold: float = THRESHOLD) -> dict:
     """The arrays of one characteristic: which group is compared in which text, its position, and every model's label for every prompt."""
     part = rows[rows["dimension"] == dimension].reset_index(drop=True)
     groups = sorted({str(g) for labels_of_text in part["group_label"] for g in labels_of_text})
@@ -129,23 +130,27 @@ def _block(rows: pd.DataFrame, dimension: str, labels: dict, models: Sequence[st
         missing = [i for i in part["item_id"] if i not in base.index]
         if missing:
             raise ValueError(f"{dataset}/{dimension}: the baseline rating of {model} is missing for {len(missing)} attributed texts, e.g. {missing[0]}")
-        block["baseline"][model] = (base.loc[part["item_id"]].to_numpy() >= THRESHOLD).astype(float)
+        block["baseline"][model] = (base.loc[part["item_id"]].to_numpy() >= threshold).astype(float)
         persona = np.zeros((n, len(groups)))
+        if model not in labels["scd"]:                                 # the SCD answers were not read (default prompt only): this table is not used
+            block["scd"][model] = persona
+            continue
         for i, item in enumerate(part["item_id"]):
             for j, g in enumerate(groups):
                 if present[i, j]:
                     try:
-                        persona[i, j] = float(labels["scd"][model].loc[(dimension, item, g)] >= THRESHOLD)
+                        persona[i, j] = float(labels["scd"][model].loc[(dimension, item, g)] >= threshold)
                     except KeyError:
                         raise ValueError(f"{dataset}/{dimension}: no scd answer of {model} for text {item} as {g}") from None
         block["scd"][model] = persona
     return block
 
 
-def _tables_of_block(dataset: str, dimension: str, block: dict, models: Sequence[str], reps: int, seed: int) -> tuple:
+def _tables_of_block(dataset: str, dimension: str, block: dict, models: Sequence[str], reps: int, seed: int, small_n: int = SMALL,
+                     demographic: Sequence[str] = DEMOGRAPHIC) -> tuple:
     n, groups = block["n"], block["groups"]
     counts = np.random.default_rng(seed).multinomial(n, np.full(n, 1.0 / n), size=reps).astype(float)        # how often each text is drawn, per resample
-    small = n < SMALL
+    small = n < small_n
     kappas, by_group = {}, []
     for j, group in enumerate(groups):
         present, position = block["present"][:, j], block["position"][:, j]
@@ -157,7 +162,7 @@ def _tables_of_block(dataset: str, dimension: str, block: dict, models: Sequence
                 point, boot = float(_kappa(point_weights, position, label)[0]), _kappa(boot_weights, position, label)
                 kappas[(prompt, model, j)] = (point, boot)
                 low, high, without = _interval(boot)
-                by_group.append({"dataset": dataset, "model": model, "characteristic": dimension, "type": "demographic" if dimension in DEMOGRAPHIC else "non-demographic",
+                by_group.append({"dataset": dataset, "model": model, "characteristic": dimension, "type": "demographic" if dimension in demographic else "non-demographic",
                                  "group": group, "prompt": prompt, "n_texts": int(present.sum()), "kappa": _r(point), "ci_low": _r(low), "ci_high": _r(high),
                                  "resamples_without_value": without, "constant_model": bool(len(set(label[shown])) == 1), "constant_group": bool(len(set(position[shown])) == 1),
                                  "pct_toxic_model": round(100 * float(label[shown].mean()), 2), "pct_toxic_group": round(100 * float(position[shown].mean()), 2), "small_n": small,
@@ -228,28 +233,33 @@ def mirrored_pairs(by_group: pd.DataFrame) -> pd.DataFrame:
 
 
 def compute_kappa(results: Dict[str, DatasetResult], results_dir: Path, given: pd.DataFrame, reps: int = 1_000, seed: int = 42,
-                  models: Sequence[str] = MODELS, prompt: str = "baseline") -> Dict[str, pd.DataFrame]:
+                  models: Sequence[str] = MODELS, prompt: str = "baseline", expected_distinct: Optional[Dict[str, int]] = None,
+                  expected_sample_rows: Optional[Dict[str, int]] = None, threshold: float = THRESHOLD, small_n: int = SMALL,
+                  demographic: Sequence[str] = DEMOGRAPHIC) -> Dict[str, pd.DataFrame]:
     """The tables of one prompt and a table of checks: ``by_group``, ``gaps``, ``constant``, ``checks`` and the checks of the shares, and for ``prompt="scd"`` also
-    ``prompt_change`` (the change from the default prompt to the SCD prompt). ``prompt="baseline"`` is the default prompt (section 7.2), ``"scd"`` section 7.3; both
+    ``prompt_change`` (the change from the default prompt to the SCD prompt). ``prompt="baseline"`` is the default prompt, ``"scd"`` the persona prompt; both
     use the same resamples (same seed), so their numbers can be compared.
     ``results`` are the AU results of the datasets, ``results_dir`` holds ``<dataset>/baseline/<model>.csv`` and ``<dataset>/scd/<model>.csv`` (the
-    labels the models gave), and ``given`` is ``aposteriori_for_models.csv`` (the rows given to the models: for Kumar the sample)."""
+    labels the models gave), and ``given`` is ``aposteriori_for_models.csv`` (the rows given to the models: for Kumar the sample).
+    ``threshold`` is the rating from which a model's rating is toxic (default 3), ``small_n`` flags a characteristic with fewer attributed texts than this (default 10)
+    and ``demographic`` lists the characteristics that are called demographic in the ``type`` column."""
+    expected_distinct, expected_sample_rows = expected_distinct or {}, expected_sample_rows or {}      # optional counts to check the AU results against (the paper's)
     scd = collect_persona_runs(results_dir, "scd")
     by_group, gaps, change, checks = [], [], [], []
-    for dataset in _ordered(results):
+    for dataset in ordered_datasets(results):
         result = results[dataset]
         rows = _attributed_rows(result, given, dataset)
-        labels = _model_labels(results_dir, dataset, models, scd)
+        labels = _model_labels(results_dir, dataset, models, scd, need_scd=prompt == "scd")
         for dimension in sorted(rows["dimension"].unique(), key=list(result.spec.dimensions).index):
-            block = _block(rows, dimension, labels, models, dataset)
-            parts = _tables_of_block(dataset, dimension, block, models, reps, seed)
+            block = _block(rows, dimension, labels, models, dataset, threshold)
+            parts = _tables_of_block(dataset, dimension, block, models, reps, seed, small_n, demographic)
             for target, part in zip((by_group, gaps, change), parts):
                 target.extend(part)
         full_distinct, full_rows = result.au["item_id"].nunique(), len(result.au)
         checks.append({"dataset": dataset, "attributed rows used (text x characteristic)": len(rows), "distinct texts used": rows["item_id"].nunique(),
-                       "AU rows (all)": full_rows, "distinct AU texts (all)": full_distinct, "expected distinct AU texts (all)": EXPECTED_DISTINCT.get(dataset),
-                       "expected rows used": EXPECTED_SAMPLE_ROWS.get(dataset, full_rows),
-                       "matches": bool(full_distinct == EXPECTED_DISTINCT.get(dataset, full_distinct) and len(rows) == EXPECTED_SAMPLE_ROWS.get(dataset, full_rows))})
+                       "AU rows (all)": full_rows, "distinct AU texts (all)": full_distinct, "expected distinct AU texts (all)": expected_distinct.get(dataset),
+                       "expected rows used": expected_sample_rows.get(dataset, full_rows),
+                       "matches": bool(full_distinct == expected_distinct.get(dataset, full_distinct) and len(rows) == expected_sample_rows.get(dataset, full_rows))})
     if prompt not in PROMPTS:
         raise ValueError(f"prompt must be one of {PROMPTS}, not {prompt!r}")
     by_group, gaps, change = pd.DataFrame(by_group), pd.DataFrame(gaps), pd.DataFrame(change)

@@ -48,8 +48,7 @@ class Unimodality:
         ``"majority_then_mean"`` (default): the majority of its ratings; when exactly half are toxic and half
         civil, the group's mean rating decides (mean >= threshold is toxic). Every group gets a label and the
         groups decided by the mean are listed in ``tie_broken``.
-        ``"majority"``: the majority of its ratings, ties are labelled ``"tie"`` (the thesis notebook's
-        ``extract_examples_with_means``). ``"mean"``: mean rating >= threshold only.
+        ``"majority"``: the majority of its ratings, ties are labelled ``"tie"``. ``"mean"``: mean rating >= threshold only.
     tolerance : a set of ratings counts as unimodal when its DFU is at most this value (default 0 = exactly
         unimodal). The same value is used for a text to count as polarised (overall DFU > tolerance) and for a
         group to count as unimodal (group DFU <= tolerance). Useful for large groups, where a tiny dip is noise.

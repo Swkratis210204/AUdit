@@ -2,8 +2,9 @@
 import pandas as pd
 import pytest
 
-from perspective_audit import DatasetSpec, ratings_per_text, run_dataset, save_total_eda
-from perspective_audit.eda_total import ratings_per_text_lines, rating_shares, toxicity_shares
+from perspective_audit import DatasetSpec, run_dataset
+from paper.eda_total import ratings_per_text, save_total_eda
+from paper.eda_total import ratings_per_text_lines, rating_shares, toxicity_shares
 
 
 def toy(name, scale_max, high, middle, low):
@@ -56,7 +57,7 @@ def groups_tables():
 
 
 def test_toxicity_by_group_harmonizes_names_and_keeps_the_originals():
-    from perspective_audit import toxicity_by_group
+    from paper.eda_total import toxicity_by_group
     table = toxicity_by_group(groups_tables())
     gender = table[table["dimension"] == "gender"]
     assert sorted(gender["group"].unique()) == ["man", "woman"] and len(gender) == 4                       # Man / male -> man, Woman / female -> woman
@@ -68,7 +69,7 @@ def test_toxicity_by_group_harmonizes_names_and_keeps_the_originals():
 
 def test_save_toxicity_by_dimension(tmp_path):
     pytest.importorskip("matplotlib")
-    from perspective_audit import save_toxicity_by_dimension
+    from paper.eda_total import save_toxicity_by_dimension
     written = save_toxicity_by_dimension(groups_tables(), tmp_path / "t")
     assert set(written) == {"toxicity_by_group.csv", "toxicity_by_dimension_all_texts.png", "toxicity_by_dimension_all_texts.pdf",
                             "toxicity_by_dimension_au_texts.png", "toxicity_by_dimension_au_texts.pdf"}
@@ -81,7 +82,7 @@ def test_the_rating_figure_names_orders_and_colors(tmp_path):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.colors import to_hex
-    from perspective_audit.eda_total import _rating_figure, BLUE, RED
+    from paper.eda_total import _rating_figure, BLUE, RED
     shares = pd.concat([rating_shares({"kumar": toy("kumar", 5, 5, 3, 2)}), rating_shares({"mhs": toy("mhs", 3, 3, 2, 1)}),
                         rating_shares({"attitudes": toy("attitudes", 5, 5, 3, 2)}), rating_shares({"popquorn": toy("popquorn", 5, 5, 3, 2)})], ignore_index=True)
     fig = _rating_figure(plt, shares, {"kumar": 3, "mhs": 3, "attitudes": 3, "popquorn": 3})
@@ -100,8 +101,8 @@ def test_the_dimension_figure_names_orders_and_group_labels():
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    from perspective_audit import toxicity_by_group
-    from perspective_audit.eda_total import _by_dimension_figure
+    from paper.eda_total import toxicity_by_group
+    from paper.eda_total import _by_dimension_figure
     columns = ["ratings", "toxic %", "AU ratings", "AU toxic %", "kept in AU analysis"]
 
     def table(groups):
@@ -120,7 +121,7 @@ def test_the_dimension_figure_names_orders_and_group_labels():
 
 def test_the_appendix_figures_are_redrawn_from_the_saved_csv_files(tmp_path):
     pytest.importorskip("matplotlib")
-    from perspective_audit import save_appendix_figures, save_toxicity_by_dimension
+    from paper.eda_total import save_appendix_figures, save_toxicity_by_dimension
     save_total_eda(results(), tmp_path)
     save_toxicity_by_dimension(groups_tables(), tmp_path)
     before = {name: (tmp_path / name).read_bytes() for name in ("rating_distribution.csv", "toxicity.csv", "toxicity_by_group.csv")}

@@ -116,16 +116,6 @@ def test_save_writes_the_four_csv_files_and_the_readme(tmp_path):
     assert len(pd.read_csv(tmp_path / "kappa" / "kappa_by_group.csv")) == 8
 
 
-def test_latex_tables_one_per_dataset(tmp_path):
-    from perspective_audit import save_kappa_tables
-    t = tables(tmp_path / "runs", reps=200)
-    assert "se" in t["by_group"].columns and (t["by_group"]["se"] >= 0).all()
-    written = save_kappa_tables(t["by_group"], tmp_path / "tables")
-    text = written["attitudes"].read_text(encoding="utf-8")
-    assert set(written) == {"attitudes"} and r"\label{tab:kappa_attitudes}" in text and r"\toprule" in text and "Toxic labels" in text
-    assert text.count("\makecell") == 8 and "$^\dagger$" in text and "{[}" in text and "(D)" in text
-
-
 def test_shares_excluded_zero_and_mirrored(tmp_path):
     t = tables(tmp_path, reps=500)
     for name in ("gaps", "prompt_change"):
@@ -136,33 +126,3 @@ def test_shares_excluded_zero_and_mirrored(tmp_path):
         assert (table["interval_excludes_zero"] == ((table["ci_low"] > 0) | (table["ci_high"] < 0))).all()
     assert t["share_problems"].empty
     assert t["by_group"]["mirrored"].all() and list(t["mirrored"]["characteristic"]) == ["gender"]      # men and women take opposite sides on every text
-
-
-def test_kappa_figures_draw_what_the_csv_says(tmp_path):
-    from perspective_audit import save_kappa_figures
-    t = tables(tmp_path / "runs", reps=300)
-    info = save_kappa_figures(t["by_group"], t["gaps"], tmp_path / "images")
-    row = info.iloc[0]
-    assert (tmp_path / "images" / "kappa_attitudes.pdf").stat().st_size > 0 and (tmp_path / "images" / "kappa_attitudes.png").stat().st_size > 0
-    assert row["colored_bars"] == row["colored_bars_in_csv"] == int(t["gaps"].query("prompt == 'baseline'")["interval_excludes_zero"].sum())
-    base = t["by_group"].query("prompt == 'baseline'")
-    assert row["outlined_cells"] == int(((base["ci_low"] > 0) | (base["ci_high"] < 0)).sum()) and row["height_inches"] <= 8
-
-
-def test_default_and_scd_are_separate_sections(tmp_path):
-    from perspective_audit import save_kappa_tables
-    default, scd = one_prompt(tmp_path / "d", "baseline", 300), one_prompt(tmp_path / "s", "scd", 300)
-    assert set(default["by_group"]["prompt"]) == {"baseline"} and set(default["gaps"]["prompt"]) == {"baseline"} and "prompt_change" not in default
-    assert set(scd["by_group"]["prompt"]) == {"scd"} and set(scd["gaps"]["prompt"]) == {"scd"} and len(scd["prompt_change"]) == 4       # the change belongs to 7.3
-    both = tables(tmp_path / "both", 300)
-    row = ["model", "group"]                                                                 # the same resamples: a prompt gives the same numbers alone or together
-    assert default["by_group"].set_index(row)["kappa"].equals(both["by_group"].query("prompt == 'baseline'").set_index(row)["kappa"])
-    assert default["by_group"].set_index(row)["ci_low"].equals(both["by_group"].query("prompt == 'baseline'").set_index(row)["ci_low"])
-    save_kappa(default, tmp_path / "kappa" / "default"), save_kappa(scd, tmp_path / "kappa" / "scd")
-    assert not (tmp_path / "kappa" / "default" / "kappa_prompt_change.csv").exists() and (tmp_path / "kappa" / "scd" / "kappa_prompt_change.csv").exists()
-    assert "default prompt only" in (tmp_path / "kappa" / "default" / "README.md").read_text(encoding="utf-8")
-    save_kappa_tables(default["by_group"], tmp_path / "kappa" / "default" / "tables"), save_kappa_tables(scd["by_group"], tmp_path / "kappa" / "scd" / "tables")
-    text_default = (tmp_path / "kappa" / "default" / "tables" / "table_attitudes.tex").read_text(encoding="utf-8")
-    text_scd = (tmp_path / "kappa" / "scd" / "tables" / "table_attitudes.tex").read_text(encoding="utf-8")
-    assert "with the default prompt" in text_default and "Baseline" not in text_default and text_default.count(r"\makecell") == 4
-    assert r"with the \ac{SCD} prompt" in text_scd and text_scd.count(r"\makecell") == 4

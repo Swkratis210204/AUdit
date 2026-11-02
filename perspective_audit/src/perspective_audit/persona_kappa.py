@@ -1,4 +1,4 @@
-"""Kappa between the personas of the SCD prompt and the groups (section 7.3), the full persona-by-group matrix and the agreement between two personas.
+"""Kappa between the personas of the SCD prompt and the groups, the full persona-by-group matrix and the agreement between two personas.
 
 In the SCD prompt a model rates a text as a person of each group that is compared in that text, so for every attributed text it has one label per persona.
 ``compute_persona_kappa`` reads those answers (nothing is asked of a model) and the group positions of ``kappa_groups`` and gives, per dataset, model and characteristic:
@@ -19,7 +19,7 @@ from typing import Dict, Optional, Sequence
 import numpy as np
 import pandas as pd
 
-from .eda_total import _ordered
+from .names import ordered_datasets
 from .kappa_groups import MODELS, _attributed_rows, _block, _interval, _kappa, _model_labels, _r, _se
 from .persona_annotation import collect_persona_runs
 from .pipeline import DatasetResult
@@ -106,17 +106,17 @@ def diagonal_summary(matrix: pd.DataFrame) -> pd.DataFrame:
 
 
 def compute_persona_kappa(results: Dict[str, DatasetResult], results_dir: Path, given: Optional[pd.DataFrame], reps: int = 10_000, seed: int = 42,
-                          models: Sequence[str] = MODELS) -> Dict[str, pd.DataFrame]:
+                          models: Sequence[str] = MODELS, threshold: float = 3) -> Dict[str, pd.DataFrame]:
     """``matrix``, ``pairs``, ``diagonal`` (see the module) and ``high_pairs`` (the persona pairs with a kappa above 0.8). ``results`` are the AU results of the datasets,
     ``results_dir`` holds ``<dataset>/scd/<model>.csv`` and ``<dataset>/baseline/<model>.csv``, ``given`` is ``aposteriori_for_models.csv``."""
     scd = collect_persona_runs(results_dir, "scd")
     matrix, pairs = [], []
-    for dataset in _ordered(results):
+    for dataset in ordered_datasets(results):
         result = results[dataset]
         rows = _attributed_rows(result, given, dataset)
         labels = _model_labels(results_dir, dataset, models, scd)
         for dimension in sorted(rows["dimension"].unique(), key=list(result.spec.dimensions).index):
-            block = _block(rows, dimension, labels, models, dataset)
+            block = _block(rows, dimension, labels, models, dataset, threshold)
             for target, part in zip((matrix, pairs), _tables_of_block(dataset, dimension, block, models, reps, seed)):
                 target.extend(part)
     matrix, pairs = pd.DataFrame(matrix), pd.DataFrame(pairs)

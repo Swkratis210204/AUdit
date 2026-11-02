@@ -18,22 +18,14 @@ from typing import Dict
 import numpy as np
 import pandas as pd
 
-from .pipeline import DatasetResult
+from perspective_audit.pipeline import DatasetResult
 
 __all__ = ["rating_shares", "toxicity_shares", "ratings_per_text", "ratings_per_text_lines", "save_total_eda",
            "read_group_tables", "toxicity_by_group", "save_toxicity_by_dimension", "save_appendix_figures"]
 
 MIN_RATINGS = 4                                    # a text with fewer ratings cannot be AU (2 + 2)
 BLUE, RED = "#4C72B0", "#C44E52"
-DATASET_LABEL = {"popquorn": "POPQUORN", "attitudes": "Attitudes", "mhs": "MHS", "kumar": "Kumar"}      # the names in the figures
-DATASET_ORDER = ["attitudes", "popquorn", "mhs", "kumar"]                                               # the order of the panels and the legends
-DATASET_COLOR = {"attitudes": "#4C72B0", "kumar": "#55A868", "mhs": "#C44E52", "popquorn": "#8172B3"}
-
-
-def _ordered(names) -> list:
-    """The dataset names in the order of the figures (a name that is not listed goes last, in the order it comes)."""
-    names = list(dict.fromkeys(names))
-    return sorted(names, key=lambda n: DATASET_ORDER.index(n) if n in DATASET_ORDER else len(DATASET_ORDER))
+from perspective_audit.names import DATASET_COLOR, DATASET_LABEL, DATASET_ORDER, ordered_datasets as _ordered      # noqa: E402,F401
 
 
 def _save_figure(plt, fig, folder: Path, stem: str, written: dict, formats=("png",), rect=None) -> None:

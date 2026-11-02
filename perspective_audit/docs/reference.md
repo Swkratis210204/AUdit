@@ -12,7 +12,7 @@ Tools to audit **whose perspective** a toxicity rating reflects, in two parts th
    sensitivity** check (the same texts, the question reworded) and **sociodemographic (SCD) prompting** (the model answers as
    a person of each annotator group).
 
-Everything is a Python package (`src/perspective_audit`) plus one notebook (`notebooks/Datasets.ipynb`) that calls it.
+Everything is a Python package (`src/perspective_audit`). This page is the full reference; start with the [README](../../README.md) and the nine step-by-step tutorials in this folder (and [parameters.md](parameters.md) for every setting). The notebook that rebuilds the paper is `paper/notebooks/Datasets.ipynb` in the repository and is not part of the package.
 
 - [Install](#install) · [Data](#data) · [Quick start](#quick-start) · [The AU rule](#the-au-rule)
 - [Datasets](#datasets) · [Adding your own dataset](#adding-your-own-dataset) · [Saving the AU texts](#saving-the-au-texts)
@@ -61,7 +61,7 @@ The first cell of the notebook checks that the package can be imported and tells
 
 The raw datasets are **not in the repository** (some are hundreds of MB). Each dataset description in
 `src/perspective_audit/datasets/<name>.py` says where its loader looks. `find_root()` finds the repository root by looking, from the
-working directory upwards, for a folder named `datasets`; set the environment variable `THESIS_ROOT` to point elsewhere.
+working directory upwards, for a folder named `datasets`; set the environment variable `PERSPECTIVE_AUDIT_ROOT` to point elsewhere (`THESIS_ROOT` still works).
 
 | dataset | file the loader reads | where it comes from |
 |---|---|---|
@@ -124,7 +124,7 @@ annotate(hub["chatgpt"], inputs, ROOT / "new_results", prompt=my_prompt,
          run="baseline", datasets=["popquorn"])
 ```
 
-The notebook does exactly this, one model and one dataset at a time, with switches at the top of section 6.
+The tutorial [05_llm_annotation](05_llm_annotation.md) does exactly this, one model and one dataset at a time.
 
 ## The AU rule
 
@@ -166,7 +166,7 @@ result = tool.au_pruned(table, "item_id", "rating", "gender", min_au_texts=10, k
 | `kumar` | 107,620 comments, 5 ratings each | 1-5 (score 0-4 plus 1) | 3 or more | gender, race, age, politics, religion |
 
 Age is grouped in all datasets as `gen z`, `millenial`, `gen x+` (the spelling `millenial` is the one used in the data and in the
-thesis). The exact groups and what is removed are in each `datasets/<name>.py` and in the notebook sections 1-4. A rating with a value
+thesis). The exact groups and what is removed are in each `datasets/<name>.py` and in the tutorials [01_data](01_data.md) to [04_eda](04_eda.md). A rating with a value
 that the spec removes (for example "Non-binary" in POPQUORN gender) is dropped before the analysis.
 
 `SPECS` is a dict `{name: DatasetSpec}`; `get_spec(name)` looks one up.
@@ -214,7 +214,7 @@ like the ones in `datasets/` and list it in `datasets/__init__.py`.
 
 ## Saving the AU texts
 
-`save_au_tables` writes, under the folder you give it (the notebook uses `new_results/`):
+`save_au_tables` writes, under the folder you give it (for example `results/`):
 
 | file | content |
 |---|---|
@@ -414,7 +414,7 @@ annotate(model, inputs, out_dir, prompt, run="baseline", batch_size=10, parse_re
 |---|---|
 | `model` | one `Model` from the hub |
 | `inputs` | `{dataset: table with item_id, text}`, from `load_model_inputs(path)` (each text once) |
-| `out_dir` | where the dataset folders go (the notebook uses `new_results/`) |
+| `out_dir` | where the dataset folders go (for example `results/`) |
 | `prompt` | your function `prompt(texts, item)` |
 | `run` | the condition, e.g. `baseline` (no persona); results go to `<dataset>/<run>/` |
 | `limit` | only the first N texts of each dataset: a **pilot** |
@@ -455,7 +455,7 @@ subset = sample_inputs(inputs, 50, seed=42)        # 50 random texts per dataset
 annotate(model, subset, out_dir, prompt=other_prompt, run="prompt_sensitivity")      # -> <dataset>/prompt_sensitivity/, next to <dataset>/baseline/
 ```
 
-The baseline is not asked again: its file already has these texts. This is section 6.2 of the notebook, where each dataset ends up with a
+The baseline is not asked again: its file already has these texts. This is the prompt sensitivity check of [07_prompt_sensitivity](07_prompt_sensitivity.md) (`compare_prompts` compares the runs), where each dataset ends up with a
 `baseline/`, a `prompt_sensitivity/` and a `prompt_sensitivity_2/` folder (two rewordings), and figures and tables compare them. The exact prompts are written to `new_results/prompts.md`.
 
 ### Sociodemographic (SCD) prompting
@@ -540,11 +540,11 @@ temperature costs another full call.
 These are in `perspective_audit.scoring` and are independent of `annotate`.
 
 **`score_texts(model, texts, prompt=None, batch_size=10, parse_retries=2)`** scores a list of texts and returns a table (`batch`,
-`text_index`, `text`, `score`, `label`). It uses a `ScoringPrompt`, which has the thesis wording (`"v1"`) and a variant that also states the
+`text_index`, `text`, `score`, `label`). It uses a `ScoringPrompt`, which has the wording of the paper (`"v1"`) and a variant that also states the
 threshold (`"v2"`).
 
 **`score_personas(model, items, persona_map, prompt=None)`** (an earlier, simpler form of persona prompting that does not save files; the
-thesis runs use `annotate_personas`, above) asks the model to answer *as* each group of one dimension (persona
+the paper's runs use `annotate_personas`, above) asks the model to answer *as* each group of one dimension (persona
 prompting). `items` has the columns `text` and `dimension`; `persona_map` gives the personas of each dimension, for example
 `{"gender": ["man", "woman"]}`. The reply is JSON keyed by persona. It returns one row per item and persona (`row`, `dimension`, `persona`,
 `label`, `score`). A reply is accepted only when every persona has a valid score; otherwise the call is repeated with a larger token budget
@@ -576,10 +576,10 @@ wording (`"v1"`) and a short one (`"compact"`).
 |---|---|
 | `ModuleNotFoundError: perspective_audit` in the notebook | the notebook kernel's Python does not have the package. Select the right kernel, or `pip install -e .` in that Python |
 | `TypeError: annotate() got an unexpected keyword argument ...` or a function that "does not exist" after you changed the code | the kernel loaded the package before the change. **Restart the kernel** and run the setup cell again |
-| `NameError: name 'all_models' is not defined` | the setup cell of section 6 has not been run in this kernel. Run it first |
+| `NameError: name 'all_models' is not defined` | the setup cell of the notebook has not been run in this kernel. Run it first |
 | `chat_api is not set (looked in ...)` | the key is missing. Add it to `.env`, or set the variable; `hub.missing()` lists what is missing |
 | `ModuleNotFoundError: openai` (or `google`) | the extra is not installed: `pip install -e ".[all-models]"` |
-| `FileNotFoundError: Could not find a folder containing 'datasets'` | run from inside the repository, or set `THESIS_ROOT` |
+| `FileNotFoundError: Could not find a folder containing 'datasets'` | run from inside the repository, or set `PERSPECTIVE_AUDIT_ROOT` |
 | `AnnotationError: ... expected 10 scores, received 9` | the model's reply did not have one `score=<n>` line per text. Open the reply in `raw/<model>.raw.jsonl`; usually the prompt needs to be stricter, or the model adds text around the scores |
 | `AnnotationError: saved batch N holds other texts than the input` | the input changed since this run was started. Use a new `run` name |
 | `AnnotationError: ... no valid score for every group of [...]` (SCD) | the reply was cut off, not JSON, or missed or renamed a group. Open it in `raw/<model>.raw.jsonl`; the prompt must ask for the groups exactly as written |
@@ -592,27 +592,33 @@ wording (`"v1"`) and a short one (`"compact"`).
 
 ```
 perspective_audit/
-  pyproject.toml
-  .env.example                  the keys and optional settings, to copy to .env
-  notebooks/Datasets.ipynb      the thesis notebook: AU texts of four datasets, saving, and annotating with models
+  README.md                     the PyPI readme
+  docs/                         one short document per step (01_data ... 09_alignment) and this reference
+  notebooks/                    one runnable notebook per step, all on the built-in toy dataset
   src/perspective_audit/
-    unimodality.py              DFU and the AU rule (Unimodality, PrunedAU)
-    spec.py                     DatasetSpec
-    datasets/                   popquorn.py, attitudes.py, mhs.py, kumar.py, groups.py (shared age groups)
-    pipeline.py                 clean, run_dataset, DatasetResult
-    export.py                   save_au_tables and the CSV format of an AU table
-    eda.py                      eda_tables, eda_figures, save_eda: the description of a dataset
-    sampling.py                 minimal_cover, cover_per_dimension (the sample of a large dataset)
-    env.py                      the .env file and environment variables
-    models.py                   ModelConfig, Model, ModelHub, DEFAULT_CONFIGS and the providers
-    prompts.py                  ScoringPrompt, PersonaPrompt and the parsers of their answers
-    scoring.py                  score_texts, score_personas
-    annotation.py               annotate, ensemble, inspect_run, progress, collect_runs, load_model_inputs, sample_inputs
-    persona_annotation.py       SCD prompting: annotate_personas, load_persona_inputs, persona_long, collect_persona_runs, inspect_personas
+    unimodality.py              DFU and the AU rule with the 10-text rule (Unimodality, PrunedAU)
+    spec.py, datasets/          DatasetSpec and the four datasets of the paper
+    pipeline.py, export.py      clean, run_dataset, DatasetResult; save_au_tables
+    sampling.py, utils.py       samples of attributed texts; small helpers
+    models.py, env.py           ModelConfig, Model, ModelHub, providers; the .env file
+    prompts.py, scoring.py      the prompt objects and their parsers
+    annotation.py               annotate, ensemble, inspect_run, collect_runs (your prompt, one model, one dataset)
+    persona_annotation.py       persona (SCD) prompting
     agreement.py                cohen_kappa, weighted_kappa, spearman
-    utils.py                    find_root, read_au_csv and small helpers
+    eda.py, eda_dataset.py      describing a dataset
+    attribution_bootstrap.py    attribution rates and the bootstrap gap
+    shuffling_robustness.py     the chance baseline (permutation null)
+    kappa_groups.py             kappa between a model and each group, with bootstrap intervals
+    persona_kappa.py, poles.py  persona alignment; alignment with the toxic and the civil pole
+    names.py                    dataset and model names, order and colours
+    prompt_sensitivity.py       compare_prompts: does rewording the question change the ratings
+    model_eda.py                how each model uses the scale and its share of toxic labels
+    model_comparison.py         compare_models: do the models agree with each other
+    toy.py                      the toy dataset and stand-in models for the tutorials
   tests/                        tests with stand-in models (no keys, network or credits)
 ```
+
+The code of the paper (LaTeX tables, figures, the section 6 and 7 analyses with the paper's counts) is in the repository folder `paper/`.
 
 ## Tests
 
@@ -623,14 +629,15 @@ pytest
 
 The tests use stand-in models, so they need no keys, no network and cost nothing. They cover the AU rule, the sampling, the export format,
 the models (retries, key handling, parsing), `annotate` (the files it writes, resuming, unparseable replies, custom prompts, the run log),
-the agreement measures, and `annotate_personas` (one call per text and dimension, the saved form, the seeded order, resuming, incomplete replies).
+the agreement measures, `annotate_personas` (one call per text and dimension, the saved form, the seeded order, resuming, incomplete replies), the kappa
+tables, the toy dataset with its rule parameters, and `compare_prompts`.
 
 ## Known limits
 
 - **The reply format of `annotate` is fixed** (`score=<n>` per line). The prompt is yours, the parser is not.
 - **The labels are `toxic` and `civil`.** The rest of the package (summaries, the ensemble table) depends on those two strings.
 - **`annotate` runs one model on one dataset at a time**, on purpose, so a problem shows where it happens. Loop over `hub` to run all.
-- **Key variable names** (`chat_api`, `gemini_key`, ...) are the ones of the thesis. Rename them with `<NAME>_API_KEY_ENV`.
+- **Key variable names** (`chat_api`, `gemini_key`, ...) are historical. Rename them with `<NAME>_API_KEY_ENV`.
 - **SCD prompting** (`annotate_personas`) rates all the groups of a dimension in one call, so the personas can influence each other, and its
   reply format is fixed (JSON keyed by group). The older `score_personas` takes a `PersonaPrompt` object and saves no files.
 - **The Attitudes loader reads a pickle** from a fixed location (or `PERSPECTIVE_AUDIT_ATTITUDES_FILE`); the other loaders need the files

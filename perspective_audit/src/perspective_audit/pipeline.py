@@ -1,6 +1,7 @@
 """From a dataset description to its AU texts: clean, find the AU texts of every dimension, remove thin groups, summarise."""
 from __future__ import annotations
 
+import dataclasses
 import pickle
 import tempfile
 from dataclasses import dataclass
@@ -19,9 +20,9 @@ AU_COLUMNS = ["dataset", "dimension", "item_id", "text", "n_ratings", "dfu", "to
 
 
 def make_tool(spec: DatasetSpec) -> Unimodality:
-    """The AU tool with the rating scale and rules of the dataset (2 ratings per group, 2 groups)."""
-    return Unimodality(scale=range(1, spec.scale_max + 1), min_ratings=2, min_groups=2,
-                       toxic_threshold=spec.toxic_threshold, tolerance=spec.tolerance)
+    """The AU tool with the rating scale and rules of the dataset (ratings per group, groups per text, tolerance, label rule)."""
+    return Unimodality(scale=range(1, spec.scale_max + 1), min_ratings=spec.min_ratings, min_groups=spec.min_groups,
+                       toxic_threshold=spec.toxic_threshold, label_rule=spec.label_rule, tolerance=spec.tolerance)
 
 
 def clean(spec: DatasetSpec, raw: pd.DataFrame):
@@ -133,14 +134,19 @@ class DatasetResult:
 
 
 def run_dataset(spec: DatasetSpec, root: Optional[Path] = None, raw: Optional[pd.DataFrame] = None,
-                min_au_texts: Optional[int] = None, cache: Optional[Path] = None) -> DatasetResult:
+                min_au_texts: Optional[int] = None, cache: Optional[Path] = None, **options) -> DatasetResult:
     """Load (unless ``raw`` is given), clean, and find the AU texts of every dimension of a dataset.
 
     ``cache`` is a file for a large dataset (Kumar takes minutes): when it exists and was made for the same dataset and ``min_au_texts``, the
     result is read from it instead of being computed again; otherwise the result is computed and saved there. It is only a convenience: delete
     the file to run the analysis again (after the data, the rules or the package changed), and use the same Python that made it."""
+    if options:                    # any rule of the spec can be changed for this run: min_ratings=3, min_groups=3, tolerance=0.05, scale_max=7, ...
+        unknown = sorted(set(options) - {f.name for f in dataclasses.fields(spec)})
+        if unknown:
+            raise TypeError(f"run_dataset got options that are not fields of DatasetSpec: {unknown}")
+        spec = dataclasses.replace(spec, **options)
     threshold = spec.min_au_texts if min_au_texts is None else min_au_texts
-    key = (spec.name, threshold)
+    key = (spec.name, threshold) if not options else (spec.name, threshold, tuple(sorted(options.items(), key=lambda kv: kv[0])))
     if cache is not None and Path(cache).exists():
         with open(cache, "rb") as f:
             saved_key, saved = pickle.load(f)
@@ -161,7 +167,7 @@ def run_dataset(spec: DatasetSpec, root: Optional[Path] = None, raw: Optional[pd
 
 def load_results(names: Optional[Sequence[str]] = None, root: Optional[Path] = None, cache_dir: Optional[Path] = None,
                  keep_raw: bool = False) -> Dict[str, DatasetResult]:
-    """The AU results of the datasets (default: the four of the thesis, in the order Attitudes, POPQUORN, MHS, Kumar), read from a temporary cache so that the
+    """The AU results of the datasets (default: the four of the paper, in the order Attitudes, POPQUORN, MHS, Kumar), read from a temporary cache so that the
     AU analysis runs once and a later session loads them in seconds. ``cache_dir`` defaults to ``perspective_audit_cache`` in the temporary folder of the
     system. A result is made at most once; delete its file to make it again (after the data, the rules or the package changed), and use the same Python that
     made it.

@@ -22,7 +22,10 @@ class DatasetSpec:
     scale_max: int = 5                              # ratings run from 1 to scale_max
     toxic_threshold: float = 3
     tolerance: float = 0.0
-    min_au_texts: int = 10                          # a group in fewer AU texts than this is removed
+    min_au_texts: int = 10                          # a group in fewer AU texts than this is removed (the 10-text rule); 0 keeps every group, i.e. all AU texts
+    min_ratings: int = 2                            # a group needs at least this many ratings on a text to be compared
+    min_groups: int = 2                             # a text needs at least this many such groups to be tested
+    label_rule: str = "majority_then_mean"          # how a group's position (toxic / civil) is decided: "majority_then_mean", "majority" or "mean"
     prefilter: Optional[Callable[[pd.DataFrame], pd.DataFrame]] = None     # applied to the raw table before the cleaning
     item_word: str = "tweet"                        # how a text is called in prompts ("tweet", "comment", ...)
     description: str = ""

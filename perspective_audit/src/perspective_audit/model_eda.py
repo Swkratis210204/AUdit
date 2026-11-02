@@ -1,4 +1,4 @@
-"""A simple description of the models' default ratings (section 7.5): how each model uses the 1-5 scale, and how often it calls a text civil or toxic.
+"""A simple description of the models' default ratings: how each model uses the 1-5 scale, and how often it calls a text civil or toxic.
 
 It reads the ratings the models already gave with the default prompt (``<dataset>/baseline/<model>.csv``), all datasets together, and asks nothing of a model.
 Two figures: the histogram of the scores of every model (four panels in one figure) and the share of civil and toxic labels of every model (one panel).
@@ -10,9 +10,8 @@ from typing import Dict, Sequence
 
 import pandas as pd
 
-from .eda_total import DATASET_ORDER
 from .kappa_groups import MODELS, THRESHOLD
-from .kappa_tables import MODEL_NAME
+from .names import DATASET_ORDER, MODEL_NAME
 
 SCORES = [1, 2, 3, 4, 5]
 CIVIL_COLOR, TOXIC_COLOR = "#0072B2", "#D55E00"
@@ -20,7 +19,8 @@ MODEL_COLOR = {"chatgpt": "#0072B2", "deepseek": "#D55E00", "gemini": "#009E73",
 WIDTH = 6.3                                   # inches: one text column of the ACM manuscript format
 
 
-def model_eda(results_dir: Path, datasets: Sequence[str] = DATASET_ORDER, models: Sequence[str] = MODELS, threshold: int = THRESHOLD) -> Dict[str, pd.DataFrame]:
+def model_eda(results_dir: Path, datasets: Sequence[str] = DATASET_ORDER, models: Sequence[str] = MODELS, threshold: int = THRESHOLD,
+              scale: Sequence[int] = SCORES) -> Dict[str, pd.DataFrame]:
     """``scores``: ratings per model and score (1-5) with the share (%); ``labels``: texts per model that are civil or toxic (a score of ``threshold`` or more is
     toxic) with the share (%). All ``datasets`` together; one rating per text and model (a text given twice counts once)."""
     ratings = []
@@ -32,10 +32,10 @@ def model_eda(results_dir: Path, datasets: Sequence[str] = DATASET_ORDER, models
             part = pd.read_csv(path, dtype={"item_id": str}).drop_duplicates("item_id")
             ratings.append(pd.DataFrame({"dataset": dataset, "model": model, "score": part["score"].astype(int)}))
     ratings = pd.concat(ratings, ignore_index=True)
-    counts = ratings.groupby(["model", "score"]).size().unstack(fill_value=0).reindex(index=list(models), columns=SCORES, fill_value=0)
+    counts = ratings.groupby(["model", "score"]).size().unstack(fill_value=0).reindex(index=list(models), columns=list(scale), fill_value=0)
     scores = counts.stack().rename("ratings").reset_index()
     scores["share_pct"] = (100 * scores["ratings"] / scores.groupby("model")["ratings"].transform("sum")).round(2)
-    toxic = counts[[s for s in SCORES if s >= threshold]].sum(axis=1)
+    toxic = counts[[s for s in scale if s >= threshold]].sum(axis=1)
     civil = counts.sum(axis=1) - toxic
     labels = pd.DataFrame({"model": list(models), "civil": civil.to_numpy(), "toxic": toxic.to_numpy()})
     labels["civil_pct"] = (100 * labels["civil"] / (labels["civil"] + labels["toxic"])).round(2)

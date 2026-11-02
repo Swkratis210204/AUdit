@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from perspective_audit import save_ablation_prompt
-from perspective_audit.ablation_prompt import RUNS, agreement_by_model, agreement_pooled, load_samples, wording_vs_model
+from paper.ablation_prompt import save_ablation_prompt
+from paper.ablation_prompt import RUNS, agreement_by_model, agreement_pooled, load_samples, wording_vs_model
 
 BASE = [1, 1, 1, 1, 1, 5, 5, 5, 5, 5]
 

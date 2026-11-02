@@ -2,8 +2,9 @@
 import pandas as pd
 import pytest
 
-from perspective_audit import DatasetSpec, run_dataset, save_total_dfu
-from perspective_audit.dfu_total import (dfu_by_ratings_per_text, dfu_group_level, dfu_histogram, dfu_pairwise_ks, dfu_summary, dfu_text_table)
+from perspective_audit import DatasetSpec, run_dataset
+from paper.dfu_total import save_total_dfu
+from paper.dfu_total import (dfu_by_ratings_per_text, dfu_group_level, dfu_histogram, dfu_pairwise_ks, dfu_summary, dfu_text_table)
 
 
 def toy(name):

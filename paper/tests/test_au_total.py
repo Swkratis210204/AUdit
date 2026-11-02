@@ -4,8 +4,9 @@ import json
 import pandas as pd
 import pytest
 
-from perspective_audit import DatasetSpec, run_dataset, save_total_au
-from perspective_audit.au_total import (au_dimension_overlap, au_groups, au_label_patterns, au_models_input, au_summary)
+from perspective_audit import DatasetSpec, run_dataset
+from paper.au_total import save_total_au
+from paper.au_total import (au_dimension_overlap, au_groups, au_label_patterns, au_models_input, au_summary)
 
 
 def toy(name):
@@ -71,6 +72,6 @@ def test_save_writes_every_table_figure_and_the_readme(tmp_path):
                             "au_dimension_overlap.png", "au_rating_distribution.pdf", "au_rating_distribution.png", "au_toxicity_by_dimension.pdf",
                             "au_toxicity_by_dimension.png", "au_kumar_sample.png", "au_kumar_sample.pdf", "README.md"}
     assert all(path.exists() and path.stat().st_size > 0 for path in written.values())
-    from perspective_audit.au_total import save_kumar_sample_figure
+    from paper.au_total import save_kumar_sample_figure
     (tmp_path / "total_au" / "au_kumar_sample.pdf").unlink()
     assert set(save_kumar_sample_figure(tmp_path / "total_au")) == {"au_kumar_sample.pdf", "au_kumar_sample.png"}          # redrawn from the csv alone

@@ -1,4 +1,4 @@
-"""Section 7.1: do non-demographic characteristics attribute a larger share of the testable texts than demographic ones?
+"""Do non-demographic characteristics attribute a larger share of the testable texts than demographic ones?
 
 Nothing here asks a model for anything, and nothing changes the AU analysis: it reads the final results after the removal of thin groups.
 
@@ -15,32 +15,34 @@ the same drawn texts, so the two types move together. The 95% interval is the 2.
 """
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Optional, Sequence
 
 import numpy as np
 import pandas as pd
 
 from .eda import _texts
-from .eda_total import _ordered
+from .names import ordered_datasets
 from .pipeline import DatasetResult
 
 __all__ = ["attribution_table", "bootstrap_gap", "attribution_gap"]
 
 DEMOGRAPHIC = ("gender", "race", "age")
-MIN_RATINGS = 4
 COLUMNS = ["testable D", "attributed D", "testable N", "attributed N"]
 
 
-def attribution_table(result: DatasetResult) -> pd.DataFrame:
-    """One row per polarized text with at least four ratings: in how many demographic (D) and non-demographic (N) characteristics it is testable and in how many
-    it is attributed (AU), from the final results after the removal of thin groups."""
+def attribution_table(result: DatasetResult, demographic: Sequence[str] = DEMOGRAPHIC, min_text_ratings: Optional[int] = None) -> pd.DataFrame:
+    """One row per polarized text with at least ``min_text_ratings`` ratings (default: ``min_ratings * min_groups`` of the dataset, four with the default rules): in how
+    many demographic (D) and non-demographic (N) characteristics it is testable and in how many it is attributed (AU), from the final results after the removal of
+    thin groups. ``demographic`` names the characteristics that count as demographic (every other one is non-demographic)."""
     texts = _texts(result)
-    keep = texts.index[texts["polarised"] & (texts["ratings"] >= MIN_RATINGS)]
+    if min_text_ratings is None:
+        min_text_ratings = result.tool.min_ratings * result.tool.min_groups
+    keep = texts.index[texts["polarised"] & (texts["ratings"] >= min_text_ratings)]
     table = pd.DataFrame(0, index=keep, columns=COLUMNS, dtype=int)
     for dimension, pr in result.pruned.items():
-        kind = "D" if dimension in DEMOGRAPHIC else "N"
+        kind = "D" if dimension in demographic else "N"
         rows = pr.result.set_index("item_id")
-        testable = (rows["polarised"] & (rows["kept_groups"].map(len) >= 2)).reindex(keep, fill_value=False)
+        testable = (rows["polarised"] & (rows["kept_groups"].map(len) >= result.tool.min_groups)).reindex(keep, fill_value=False)
         attributed = rows["au"].reindex(keep, fill_value=False)
         table[f"testable {kind}"] += testable.to_numpy().astype(int)
         table[f"attributed {kind}"] += attributed.to_numpy().astype(int)
@@ -72,10 +74,11 @@ def bootstrap_gap(table: pd.DataFrame, reps: int = 10_000, seed: int = 42) -> di
             "share of resamples with N - D <= 0 (%)": 100 * float(np.mean(finite <= 0)), "resamples": reps, "resamples without a rate": int(reps - len(finite))}
 
 
-def attribution_gap(results: Dict[str, DatasetResult], reps: int = 10_000, seed: int = 42) -> pd.DataFrame:
+def attribution_gap(results: Dict[str, DatasetResult], reps: int = 10_000, seed: int = 42, demographic: Sequence[str] = DEMOGRAPHIC,
+                    min_text_ratings: Optional[int] = None) -> pd.DataFrame:
     """``bootstrap_gap`` for every dataset (in the order Attitudes, POPQUORN, MHS, Kumar). Every dataset starts from the same ``seed``, so its result does
     not depend on the other datasets."""
-    rows = {name: bootstrap_gap(attribution_table(results[name]), reps, seed) for name in _ordered(results)}
+    rows = {name: bootstrap_gap(attribution_table(results[name], demographic, min_text_ratings), reps, seed) for name in ordered_datasets(results)}
     table = pd.DataFrame.from_dict(rows, orient="index").rename_axis("dataset")
     for column in ("rate D %", "rate N %", "N - D (pp)", "95% interval low", "95% interval high"):
         table[column] = table[column].round(2)

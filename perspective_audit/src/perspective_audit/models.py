@@ -175,7 +175,7 @@ class Model:
         return f"Model({self.name!r}, {self.config.provider}, {self.config.model_id!r}, available={self.available()})"
 
 
-# ---- the models used in the thesis -------------------------------------------------------------------------
+# ---- the models used in the paper -------------------------------------------------------------------------
 DEFAULT_CONFIGS: Dict[str, ModelConfig] = {
     "chatgpt": ModelConfig("chatgpt", "openai_compatible", "gpt-4o-mini", api_key_env="chat_api"),
     "llama": ModelConfig("llama", "openai_compatible", "llama3:8b", api_key_env=None, base_url="http://localhost:11434/v1",

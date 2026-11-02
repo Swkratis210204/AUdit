@@ -1,4 +1,4 @@
-"""Prompts and the parsers of their answers. The wording is the one used in the thesis notebook.
+"""Prompts and the parsers of their answers. The wording is the one used in the paper.
 
 The label always follows from the score: a score below ``toxic_threshold`` is civil, at or above it is toxic, whatever
 label the model wrote. A reply without a valid score counts as unusable.
@@ -36,7 +36,7 @@ def label_from_score(score: int, toxic_threshold: float = 3) -> str:
 class ScoringPrompt:
     """One score and one label for each text of a batch.
 
-    ``version="v1"`` is the prompt of the thesis runs; ``"v2"`` also states the rule "3 or above is toxic".
+    ``version="v1"`` is the prompt of the paper's runs; ``"v2"`` also states the rule "3 or above is toxic".
     ``item`` is the word used for a text ("tweet", "comment", ...).
 
     ``write`` is your own prompt: a function ``write(texts, item) -> str`` where ``texts`` is the batch already numbered

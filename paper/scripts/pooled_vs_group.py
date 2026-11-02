@@ -7,7 +7,7 @@ Everything is reused from ``perspective_audit.kappa_groups`` (attributed rows, m
 resampling with seed 42 and 10,000 resamples) and ``Unimodality.label_info`` (the label rule: majority, an exact tie decided by the mean).
 The group kappas are checked against ``new_results/kappa/default/kappa_by_group.csv``; any difference stops the script before anything is written.
 
-Run from the repository root:  python scripts/pooled_vs_group.py
+Run from the repository root:  python paper/scripts/pooled_vs_group.py
 Output: results/pooled_vs_group/pooled_vs_group.csv, summary.md
 """
 from __future__ import annotations
@@ -18,10 +18,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "perspective_audit" / "src"))     # works without installing the package
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "perspective_audit" / "src"))     # works without installing the package
 
 from perspective_audit import find_root, load_results
-from perspective_audit.eda_total import _ordered
+from perspective_audit.names import ordered_datasets as _ordered
 from perspective_audit.kappa_groups import (MODELS, _attributed_rows, _block, _interval, _kappa, _model_labels, _r, _se)
 from perspective_audit.persona_annotation import collect_persona_runs
 

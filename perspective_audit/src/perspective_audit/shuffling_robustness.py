@@ -1,4 +1,4 @@
-"""Permutation null for the attribution rates (section 7.7): how much of the AU attribution rate of a characteristic (Table 2) and of the gap between non-demographic
+"""Permutation null for the attribution rates: how much of the AU attribution rate of a characteristic (Table 2) and of the gap between non-demographic
 and demographic characteristics (Table 3) is chance?
 
 A characteristic with more groups gives smaller groups per text, and a small group passes the unimodality test more easily. For every characteristic the null keeps
@@ -21,14 +21,14 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Sequence
 
 import numpy as np
 import pandas as pd
 from scipy.stats import spearmanr
 
 from .attribution_bootstrap import COLUMNS, DEMOGRAPHIC, attribution_gap, attribution_table
-from .eda_total import DATASET_LABEL, _ordered
+from .names import DATASET_LABEL, ordered_datasets
 from .pipeline import DatasetResult
 
 __all__ = ["compute_null", "save_null"]
@@ -36,7 +36,6 @@ __all__ = ["compute_null", "save_null"]
 PERMUTATIONS = 1_000
 KUMAR_PERMUTATIONS = 200                       # used for Kumar only when 1,000 would take too long (see ``slow_seconds``)
 SLOW_SECONDS = 1_800                           # Kumar uses KUMAR_PERMUTATIONS when the estimated time of its 1,000 permutations exceeds this
-MIN_RATINGS, MIN_GROUPS = 2, 2
 
 
 def _unimodal(counts: np.ndarray) -> np.ndarray:
@@ -49,13 +48,13 @@ def _unimodal(counts: np.ndarray) -> np.ndarray:
     return ~(rise_after | fall_before)
 
 
-def _au(sorted_ratings: np.ndarray, group: np.ndarray, n_groups: int, scale: int) -> tuple:
+def _au(sorted_ratings: np.ndarray, group: np.ndarray, n_groups: int, scale: int, min_ratings: int = 2, min_groups: int = 2) -> tuple:
     """For every text: (testable, AU) from the ratings (T x M, in the order of ``group``, the local group index of every slot, -1 for padding)."""
     member = group[:, :, None] == np.arange(n_groups)[None, None, :]                                   # T x M x G
     onehot = sorted_ratings[:, :, None] == np.arange(1, scale + 1)[None, None, :]                      # T x M x V
     counts = np.einsum("tmg,tmv->tgv", member.astype(np.float32), onehot.astype(np.float32)).astype(np.int16)
-    eligible = counts.sum(axis=2) >= MIN_RATINGS
-    testable = eligible.sum(axis=1) >= MIN_GROUPS
+    eligible = counts.sum(axis=2) >= min_ratings
+    testable = eligible.sum(axis=1) >= min_groups
     return testable, testable & (~eligible | _unimodal(counts)).all(axis=1)                          # the text is polarized overall by construction
 
 
@@ -81,7 +80,7 @@ def _arrays(result: DatasetResult, dimension: str, items: pd.Index) -> dict:
 
 def _observed_check(result: DatasetResult, dimension: str, items: pd.Index, arrays: dict) -> None:
     """The vectorised test on the observed assignment must give the AU texts of the results, and the sizes the observed testable texts."""
-    testable, au = _au(arrays["values"], arrays["group"], arrays["n_groups"], result.spec.scale_max)
+    testable, au = _au(arrays["values"], arrays["group"], arrays["n_groups"], result.spec.scale_max, result.tool.min_ratings, result.tool.min_groups)
     observed = result.pruned[dimension].result.set_index("item_id").reindex(items)
     assert testable.all(), f"{result.spec.name}/{dimension}: a testable text is not testable in the arrays"
     assert np.array_equal(au, observed["au"].to_numpy(dtype=bool)), f"{result.spec.name}/{dimension}: the vectorised AU test differs from the AU results"
@@ -118,19 +117,19 @@ def _slow_estimate(result: DatasetResult, items_by_dim: dict, rng_seed: int) -> 
 
 
 def compute_null(results: Dict[str, DatasetResult], permutations: int = PERMUTATIONS, reps: int = 10_000, seed: int = 42, slow_seconds: float = SLOW_SECONDS,
-                 log=print) -> Dict[str, pd.DataFrame]:
+                 log=print, demographic: Sequence[str] = DEMOGRAPHIC, min_text_ratings: Optional[int] = None) -> Dict[str, pd.DataFrame]:
     """``per_characteristic``, ``gap``, ``per_pair``, ``correlation`` and ``checks``. Reproduces the observed rates and gap of ``attribution_gap`` first and stops when
     they differ. A dataset whose estimated time for ``permutations`` permutations exceeds ``slow_seconds`` uses ``KUMAR_PERMUTATIONS`` instead (Kumar only)."""
-    reference_gap = attribution_gap(results, reps=reps, seed=seed)
+    reference_gap = attribution_gap(results, reps=reps, seed=seed, demographic=demographic, min_text_ratings=min_text_ratings)
     per_char, pairs, gap_rows, checks, used = [], [], [], [], {}
-    for d_index, dataset in enumerate(_ordered(results)):
+    for d_index, dataset in enumerate(ordered_datasets(results)):
         result = results[dataset]
-        table = attribution_table(result)
+        table = attribution_table(result, demographic, min_text_ratings)
         dims = list(result.pruned)
         items_by_dim = {}
         for dimension in dims:
             pr_rows = result.pruned[dimension].result.set_index("item_id")
-            testable = (pr_rows["polarised"] & (pr_rows["kept_groups"].map(len) >= MIN_GROUPS)).reindex(table.index, fill_value=False)
+            testable = (pr_rows["polarised"] & (pr_rows["kept_groups"].map(len) >= result.tool.min_groups)).reindex(table.index, fill_value=False)
             items_by_dim[dimension] = table.index[testable.to_numpy()]
         n_perm = permutations
         if dataset == "kumar" and permutations > KUMAR_PERMUTATIONS:
@@ -142,7 +141,7 @@ def compute_null(results: Dict[str, DatasetResult], permutations: int = PERMUTAT
         chance = {"D": np.zeros(len(table)), "N": np.zeros(len(table))}
         for dimension in dims:
             items = items_by_dim[dimension]
-            kind = "D" if dimension in DEMOGRAPHIC else "N"
+            kind = "D" if dimension in demographic else "N"
             started = time.perf_counter()
             null = _null_one(result, dimension, items, n_perm, np.random.default_rng([seed, d_index, dims.index(dimension)]))
             log(f"{dataset}/{dimension}: {len(items)} testable texts, {n_perm} permutations, {time.perf_counter() - started:.1f} s")
@@ -210,7 +209,7 @@ def summary_text(tables: Dict[str, pd.DataFrame], reps: int, seed: int) -> str:
          "p = (1 + permutations with attributed >= observed) / (1 + permutations). Ranges are 2.5–97.5 percentiles. D = demographic (gender, race, age), N = non-demographic. "
          "The observed testable counts, attributed counts and rates, the pooled rates and the gap with its range reproduce Tables 2 and 3 (checked against `attribution_gap`; the "
          "testable texts of every permutation equal the observed ones, asserted).", ""]
-    for dataset in _ordered(c["dataset"].unique()):
+    for dataset in ordered_datasets(c["dataset"].unique()):
         part = c[c["dataset"] == dataset]
         L += [f"## {DATASET_LABEL.get(dataset, dataset)} ({int(part['permutations'].iloc[0])} permutations)", "",
               "| characteristic | type | n groups | testable | observed attributed | observed % | chance % | chance range | excess (pp) | ratio | p |", "|---|---|---|---|---|---|---|---|---|---|---|"]
