@@ -31,7 +31,7 @@ run_dataset(spec, raw=df, tolerance=0.05, label_rule="mean")
 | function | parameters |
 |---|---|
 | `attribution_gap`, `compute_null` | `demographic=("gender", "race", "age")` (which characteristics are called demographic), `min_text_ratings` (default `min_ratings * min_groups`), `reps`, `seed` |
-| `compute_null` | `permutations=1_000` |
+| `compute_null` | `exclude_observed=True` (leave the observed assignment out of the null); no permutations: every assignment is enumerated |
 
 ## Models and prompts
 

@@ -281,7 +281,7 @@ Nothing here asks a model for anything: it reads the AU results and the labels t
 ## Definitions
 
 - **Attributed texts**: the AU rows (text x characteristic) of the final AU results, after the removal of groups in fewer than 10 AU texts (those groups stay
-  removed). **Kumar** was evaluated on a sample of 65 rows, so only those rows are used for Kumar (13 groups x 10).
+  removed). **Kumar** was evaluated on a sample of 342 rows (every group at least 50 times), so only those rows are used for Kumar.
 - **Group position** of a text: the group's label in the AU results: the majority of the binary labels of its ratings (a rating of 3 or more is toxic), an exact
   tie decided by the group's mean rating (3 or more is toxic). For **MHS** the humans' scale is 1-3, so only a rating of 3 ("Yes") is toxic, and the tie rule uses the
   mean on that scale; the models rate 1-5 and are binarized at 3 like every other dataset.

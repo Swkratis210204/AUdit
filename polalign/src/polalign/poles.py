@@ -57,7 +57,7 @@ def _alignment_rows(dataset, dimension, model, label, split, weights, n_attr) ->
 def compute_poles(results, results_dir: Path, given: pd.DataFrame, reps: int = 10_000, seed: int = 42, models: Sequence[str] = MODELS,
                   expected_attributions: Optional[Dict[str, int]] = None, threshold: float = THRESHOLD, small_n: int = SMALL) -> Dict[str, pd.DataFrame]:
     """``alignment``, ``groups``, ``direction`` and ``checks``. ``results`` are the AU results, ``results_dir`` holds ``<dataset>/baseline/<model>.csv``, ``given`` is
-    ``aposteriori_for_models.csv`` (for Kumar the sample of 65 attributions). With ``expected_attributions`` (dataset -> number of attributed rows) it raises if the number differs."""
+    ``aposteriori_for_models.csv`` (for Kumar the sample given to the models). With ``expected_attributions`` (dataset -> number of attributed rows) it raises if the number differs."""
     expected_attributions = expected_attributions or {}
     scd = collect_persona_runs(results_dir, "scd")                      # _model_labels reads both prompts; only the baseline is used here
     alignment, groups_rows, direction, checks = [], [], [], []
@@ -152,7 +152,7 @@ def _dataset_section(tables: Dict[str, pd.DataFrame], dataset: str, direction_fo
 def summary_text(tables: Dict[str, pd.DataFrame], reps: int, seed: int) -> str:
     L = ["# Alignment with the toxic and the civil pole (default prompt)", "",
          f"Split text = an attributed text where at least one group is toxic and at least one is civil. Bootstrap: {reps:,} resamples of the texts, seed {seed}. "
-         "† = the model gave one label to every attributed text of the characteristic. \\* = fewer than 5 texts. Kumar: the 65-attribution sample. "
+         "† = the model gave one label to every attributed text of the characteristic. \\* = fewer than 5 texts. Kumar: the sample given to the models. "
          f"The row `{DISTINCT}` counts each distinct text once, split if it is split under at least one characteristic.", "",
          "## 1. Kumar", ""]
     kumar = tables["alignment"][tables["alignment"]["dataset"] == "kumar"]
@@ -173,7 +173,7 @@ def summary_text(tables: Dict[str, pd.DataFrame], reps: int, seed: int) -> str:
     L += [f"  - {r['dataset']}/{r['characteristic']}: {MODEL_NAME[r['model']]} ({'toxic' if r['n_model_civil'] == 0 and r['n_split'] else 'civil' if r['n_model_toxic'] == 0 and r['n_split'] else 'no split texts'})"
           for _, r in const.iterrows()] or ["  - none"]
     L += [f"- Characteristics with no split text: {', '.join(f'{x.dataset}/{x.characteristic}' for x in a[(a['model'] == MODELS[0]) & (a['n_split'] == 0)].itertuples()) or 'none'}.",
-          "- Attributed rows per dataset equal the paper's (Attitudes 51, POPQUORN 183, MHS 105, Kumar 65): checked when the tables are computed.", ""]
+          f"- Attributed rows per dataset: {', '.join(f'{d} {n}' for d, n in zip(tables['checks']['dataset'], tables['checks']['attributed rows']))}; checked against the expected counts when the tables are computed.", ""]
     return "\n".join(L)
 
 

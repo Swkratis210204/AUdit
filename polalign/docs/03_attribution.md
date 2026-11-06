@@ -25,14 +25,15 @@ result.au                             # the final attributed texts, one row per 
 
 ## Is the attribution rate more than chance?
 
-`attribution_gap` compares the rate of demographic and non-demographic characteristics with a bootstrap. `compute_null` shuffles the ratings among the annotators of each
-text (group sizes fixed) and reruns the AU test, to see how many texts a characteristic attributes by chance.
+`attribution_gap` compares the rate of demographic and non-demographic characteristics with a bootstrap. `compute_null` deals the ratings of each text to its annotators in
+every possible way (group sizes fixed, each assignment once, the observed one left out) and reruns the AU test on each, to see how many texts a characteristic
+attributes by chance. It is exact: nothing is drawn at random.
 
 ```python
 from polalign import attribution_gap, compute_null
 
 attribution_gap({"mydata": result}, reps=10_000)
-compute_null({"mydata": result}, permutations=1_000)
+compute_null({"mydata": result})                    # exclude_observed=False to keep the observed assignment
 ```
 
 **Notebook:** [03_attribution.ipynb](../notebooks/03_attribution.ipynb)

@@ -607,7 +607,7 @@ polalign/
     agreement.py                cohen_kappa, weighted_kappa, spearman
     eda.py, eda_dataset.py      describing a dataset
     attribution_bootstrap.py    attribution rates and the bootstrap gap
-    shuffling_robustness.py     the chance baseline (permutation null)
+    shuffling_robustness.py     the chance baseline (exact permutation null)
     kappa_groups.py             kappa between a model and each group, with bootstrap intervals
     persona_kappa.py, poles.py  persona alignment; alignment with the toxic and the civil pole
     names.py                    dataset and model names, order and colours

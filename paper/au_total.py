@@ -300,7 +300,7 @@ group is below 10 or only two groups are left (then nothing is removed). All num
 - **The AU set is small**, and for some groups very small: Attitudes has 11 to 41 AU ratings per group. Read small gaps in the AU toxic shares with care.
 - **"Kept, below 10"** (orange in `au_texts_per_group.png`) are groups that the rule could not remove: all groups of the characteristic were below 10 (Attitudes
   age) or only two groups were left (Attitudes traditionalism). They are in the analysis with fewer than 10 AU texts.
-- **Kumar:** the AU set has 6,090 rows; the models were given a 65-row sample (every group at least 10 times, not proportional). `au_models_input.csv`
+- **Kumar:** the AU set has 6,090 rows; the models were given a 342-row sample (every group at least 50 times, not proportional). `au_models_input.csv`
   and `au_kumar_sample.png` show how the sample differs.
 - **Group labels** are the majority of the group's binarized ratings; an exact tie is decided by the group's mean rating (`decided by the mean`).
 - **AU depends on the number of ratings:** a text needs at least four ratings, and with few ratings DFU takes few values (see `new_results/total_dfu/`).
