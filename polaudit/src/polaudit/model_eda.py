@@ -44,7 +44,7 @@ def model_eda(results_dir: Path, datasets: Sequence[str] = DATASET_ORDER, models
 
 
 def _common_n(totals: Sequence[int]) -> int:
-    """The number of attributed texts every model scored; the figures state it, so it must be the same for all models."""
+    """The number of polarizer texts every model scored; the figures state it, so it must be the same for all models."""
     assert len(set(int(t) for t in totals)) == 1, f"the models did not score the same number of texts: {list(totals)}"
     return int(totals[0])
 
@@ -69,7 +69,7 @@ def score_histogram_figure(scores: pd.DataFrame, models: Sequence[str] = MODELS)
         ax.set_xlabel("score", fontsize=8)
     for ax in axes[:, 0]:
         ax.set_ylabel(f"% of the {n_texts} texts", fontsize=8)
-    fig.suptitle(f"Scores on the {n_texts} attributed texts (default prompt)", fontsize=10)
+    fig.suptitle(f"Scores on the {n_texts} polarizer texts (default prompt)", fontsize=10)
     fig.tight_layout()
     return fig
 
@@ -92,7 +92,7 @@ def label_share_figure(labels: pd.DataFrame, models: Sequence[str] = MODELS):
     ax.set_xlim(0, 100)
     n_texts = _common_n((part["civil"] + part["toxic"]).tolist())
     ax.set_xlabel(f"% of the {n_texts} texts labeled (score of 3 or more is toxic)", fontsize=8)
-    ax.set_title(f"Labels on the {n_texts} attributed texts (default prompt)", fontsize=10, pad=24)
+    ax.set_title(f"Labels on the {n_texts} polarizer texts (default prompt)", fontsize=10, pad=24)
     ax.legend(ncol=2, loc="upper center", bbox_to_anchor=(0.5, 1.2), frameon=False, fontsize=8)
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()

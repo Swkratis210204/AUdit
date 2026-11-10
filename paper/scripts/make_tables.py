@@ -91,7 +91,7 @@ def kappa_tables(prompt):
     out = {}
     for dataset, splits in SPLIT.items():
         part = d[d.dataset == dataset]
-        toxic = part.groupby("model").pct_toxic_model.mean().to_dict() if prompt == "scd" else None
+        toxic = part.groupby("model").pct_toxic_model.mean().to_dict()
         blocks = []
         for i, chars in enumerate(splits):
             blocks.append(tabular(part, dataset, chars, toxic if i == len(splits) - 1 else None))

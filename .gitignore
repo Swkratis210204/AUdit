@@ -25,6 +25,7 @@ recovery
 # local only, not part of the repository
 temp_old_results/
 Thesis/
+commands.txt
 
 # python and tooling caches
 __pycache__/
