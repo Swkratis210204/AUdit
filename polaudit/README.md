@@ -4,7 +4,7 @@
 `polaudit` finds the texts where annotators are polarized, finds which annotator characteristic (gender, politics, age, ...) explains the split,
 and measures which side each model takes.
 
-![A model must choose a side on a polarized text](https://raw.githubusercontent.com/Swkratis210204/polalign/main/polaudit/docs/images/polarized_case.png)
+![A model must choose a side on a polarized text](https://raw.githubusercontent.com/Swkratis210204/AUdit/main/polaudit/docs/images/polarized_case.png)
 
 ## The audit in four steps
 
@@ -14,7 +14,7 @@ and measures which side each model takes.
 3. **Ask the models.** Your prompt, your models, optionally with a persona.
 4. **Measure alignment.** Cohen's kappa between the model's labels and each group's position, with bootstrap intervals and a chance check.
 
-![The audit framework](https://raw.githubusercontent.com/Swkratis210204/polalign/main/polaudit/docs/images/framework.png)
+![The audit framework](https://raw.githubusercontent.com/Swkratis210204/AUdit/main/polaudit/docs/images/framework.png)
 
 ## Install
 
@@ -59,10 +59,10 @@ annotate(ModelHub.from_env()["chatgpt"], load_model_inputs("results/aposteriori_
 This page is the short version. The full documentation lives on GitHub, with nine tutorials (a short document and a runnable notebook each), every parameter, and the code
 that reproduces the paper:
 
-- **[Full README on GitHub](https://github.com/Swkratis210204/polalign#readme)**: overview, repository layout, all tutorials, reproducing the paper
-- [Tutorials: documents](https://github.com/Swkratis210204/polalign/tree/main/polaudit/docs) and [notebooks](https://github.com/Swkratis210204/polalign/tree/main/polaudit/notebooks)
-- [All parameters](https://github.com/Swkratis210204/polalign/blob/main/polaudit/docs/parameters.md)
-- [Reference: API keys, models, prompts, outputs, troubleshooting](https://github.com/Swkratis210204/polalign/blob/main/polaudit/docs/reference.md)
+- **[Full README on GitHub](https://github.com/Swkratis210204/AUdit#readme)**: overview, repository layout, all tutorials, reproducing the paper
+- [Tutorials: documents](https://github.com/Swkratis210204/AUdit/tree/main/polaudit/docs) and [notebooks](https://github.com/Swkratis210204/AUdit/tree/main/polaudit/notebooks)
+- [All parameters](https://github.com/Swkratis210204/AUdit/blob/main/polaudit/docs/parameters.md)
+- [Reference: API keys, models, prompts, outputs, troubleshooting](https://github.com/Swkratis210204/AUdit/blob/main/polaudit/docs/reference.md)
 
 ## The paper
 

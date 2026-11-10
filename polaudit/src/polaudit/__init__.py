@@ -26,7 +26,7 @@ from .spec import DatasetSpec
 from .unimodality import PrunedAU, Unimodality, dfu_of_hist
 from .utils import find_root, read_au_csv
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __all__ = ["Unimodality", "PrunedAU", "dfu_of_hist",
            "DatasetSpec", "SPECS", "get_spec", "run_dataset", "DatasetResult", "clean", "make_tool",
            "save_au_tables", "csv_ready", "sample_per_dimension", "minimal_cover", "cover_per_dimension", "find_root", "read_au_csv",

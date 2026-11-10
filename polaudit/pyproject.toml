@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "polaudit"
-version = "1.0.0"
+version = "1.0.1"
 readme = "README.md"
 license = {text = "MIT"}
 classifiers = [
@@ -33,9 +33,9 @@ oci = ["oci"]                  # Grok on Oracle OCI
 all-models = ["openai", "google-genai", "oci"]
 
 [project.urls]
-Homepage = "https://github.com/Swkratis210204/polalign"
-Documentation = "https://github.com/Swkratis210204/polalign#readme"
-Repository = "https://github.com/Swkratis210204/polalign"
+Homepage = "https://github.com/Swkratis210204/AUdit"
+Documentation = "https://github.com/Swkratis210204/AUdit#readme"
+Repository = "https://github.com/Swkratis210204/AUdit"
 
 [tool.setuptools.packages.find]
 where = ["src"]
