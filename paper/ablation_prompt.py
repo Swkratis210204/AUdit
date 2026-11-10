@@ -28,7 +28,7 @@ from typing import Dict, Optional, Sequence
 import numpy as np
 import pandas as pd
 
-from polalign.agreement import cohen_kappa, spearman, weighted_kappa
+from polaudit.agreement import cohen_kappa, spearman, weighted_kappa
 from .eda_total import DATASET_LABEL, _ordered, _save_figure
 
 __all__ = ["load_samples", "agreement_pooled", "agreement_by_model", "wording_vs_model", "save_ablation_prompt"]

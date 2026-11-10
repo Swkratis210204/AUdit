@@ -17,9 +17,9 @@ mhs,chatgpt,mistral,95,0.5859,0.3722,93.68,92.63,96.84,False,False
 mhs,deepseek,gemini,95,0.7534,0.3844,96.84,97.89,96.84,False,False
 mhs,deepseek,mistral,95,0.5784,0.3844,96.84,97.89,96.84,False,False
 mhs,gemini,mistral,95,0.5853,0.3116,95.79,96.84,96.84,False,False
-kumar,chatgpt,deepseek,65,0.8878,0.7239,86.15,50.77,40.0,False,False
-kumar,chatgpt,gemini,65,0.7987,0.6919,84.62,50.77,53.85,False,False
-kumar,chatgpt,mistral,65,0.7996,0.7838,89.23,50.77,61.54,False,False
-kumar,deepseek,gemini,65,0.8044,0.4848,73.85,40.0,53.85,False,False
-kumar,deepseek,mistral,65,0.6933,0.5294,75.38,40.0,61.54,False,False
-kumar,gemini,mistral,65,0.6642,0.5928,80.0,53.85,61.54,False,False
+kumar,chatgpt,deepseek,340,0.8248,0.7062,85.29,50.29,40.29,False,False
+kumar,chatgpt,gemini,340,0.754,0.6707,83.53,50.29,46.76,False,False
+kumar,chatgpt,mistral,340,0.7104,0.5344,76.76,50.29,66.47,False,False
+kumar,deepseek,gemini,340,0.8312,0.7379,87.06,40.29,46.76,False,False
+kumar,deepseek,mistral,340,0.6779,0.4305,69.71,40.29,66.47,False,False
+kumar,gemini,mistral,340,0.6326,0.5104,75.0,46.76,66.47,False,False

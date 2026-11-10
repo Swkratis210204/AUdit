@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from polalign import DatasetSpec, eda_figures, eda_tables, run_dataset, save_eda
+from polaudit import DatasetSpec, eda_figures, eda_tables, run_dataset, save_eda
 
 
 def toy():

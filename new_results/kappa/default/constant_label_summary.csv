@@ -12,11 +12,11 @@ mhs,deepseek,baseline,7,3,42.86
 mhs,gemini,baseline,7,3,42.86
 mhs,mistral,baseline,7,1,14.29
 kumar,chatgpt,baseline,13,0,0.0
-kumar,deepseek,baseline,13,1,7.69
+kumar,deepseek,baseline,13,0,0.0
 kumar,gemini,baseline,13,0,0.0
 kumar,mistral,baseline,13,0,0.0
 attitudes,all,all,40,4,10.0
 popquorn,all,all,56,0,0.0
 mhs,all,all,28,7,25.0
-kumar,all,all,52,1,1.92
-all,all,all,176,12,6.82
+kumar,all,all,52,0,0.0
+all,all,all,176,11,6.25

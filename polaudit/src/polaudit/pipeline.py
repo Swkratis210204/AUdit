@@ -168,7 +168,7 @@ def run_dataset(spec: DatasetSpec, root: Optional[Path] = None, raw: Optional[pd
 def load_results(names: Optional[Sequence[str]] = None, root: Optional[Path] = None, cache_dir: Optional[Path] = None,
                  keep_raw: bool = False) -> Dict[str, DatasetResult]:
     """The AU results of the datasets (default: the four of the paper, in the order Attitudes, POPQUORN, MHS, Kumar), read from a temporary cache so that the
-    AU analysis runs once and a later session loads them in seconds. ``cache_dir`` defaults to ``polalign_cache`` in the temporary folder of the
+    AU analysis runs once and a later session loads them in seconds. ``cache_dir`` defaults to ``polaudit_cache`` in the temporary folder of the
     system. A result is made at most once; delete its file to make it again (after the data, the rules or the package changed), and use the same Python that
     made it.
 
@@ -176,7 +176,7 @@ def load_results(names: Optional[Sequence[str]] = None, root: Optional[Path] = N
     AU texts do not need them and Kumar's raw table is large. The description of the data itself (``dataset_tables``, ``save_eda``) needs ``keep_raw=True``."""
     from .datasets import SPECS
 
-    cache_dir = Path(cache_dir) if cache_dir else Path(tempfile.gettempdir()) / "polalign_cache"
+    cache_dir = Path(cache_dir) if cache_dir else Path(tempfile.gettempdir()) / "polaudit_cache"
     results: Dict[str, DatasetResult] = {}
     for name in (names or ["attitudes", "popquorn", "mhs", "kumar"]):
         spec = SPECS[name]

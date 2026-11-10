@@ -28,10 +28,10 @@ import numpy as np
 import pandas as pd
 
 from .dfu_total import _ordered_results
-from polalign.eda import PLOT_LABEL, REASONS, eda_tables
+from polaudit.eda import PLOT_LABEL, REASONS, eda_tables
 from .eda_total import (BLUE, DATASET_LABEL, GROUP_PLOT_LABEL, RED, _by_dimension_figure, _ordered, _rating_figure, _save_figure,
                         toxicity_by_group)
-from polalign.pipeline import DatasetResult
+from polaudit.pipeline import DatasetResult
 
 __all__ = ["au_summary", "au_groups", "au_label_patterns", "au_dimension_overlap", "au_models_input", "save_total_au", "save_kumar_sample_figure"]
 

@@ -14,9 +14,9 @@ mhs,mistral,scd,7,4,57.14
 kumar,chatgpt,scd,13,0,0.0
 kumar,deepseek,scd,13,0,0.0
 kumar,gemini,scd,13,0,0.0
-kumar,mistral,scd,13,1,7.69
+kumar,mistral,scd,13,0,0.0
 attitudes,all,all,40,10,25.0
 popquorn,all,all,56,0,0.0
 mhs,all,all,28,13,46.43
-kumar,all,all,52,1,1.92
-all,all,all,176,24,13.64
+kumar,all,all,52,0,0.0
+all,all,all,176,23,13.07

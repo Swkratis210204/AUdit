@@ -4,9 +4,9 @@ import json
 import pandas as pd
 import pytest
 
-from polalign import Env, Model, ModelConfig
-from polalign.annotation import AnnotationError
-from polalign.persona_annotation import (annotate_personas, collect_persona_runs, group_order, inspect_personas,
+from polaudit import Env, Model, ModelConfig
+from polaudit.annotation import AnnotationError
+from polaudit.persona_annotation import (annotate_personas, collect_persona_runs, group_order, inspect_personas,
                                                   load_persona_inputs, persona_long)
 
 

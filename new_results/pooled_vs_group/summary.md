@@ -1,6 +1,6 @@
 # Pooled kappa vs. group kappa (default prompt)
 
-Cohen's kappa of the model's default-prompt label against the pooled label of the attributed texts and against each group's position. Bootstrap: 10,000 resamples of the texts, seed 42 (those of the existing tables). † = the model gave one label to every text (kappa set to 0). Group kappas are identical to Table 4 and Tables 16-18 (checked by the script). Kumar: the 65-attribution sample.
+Cohen's kappa of the model's default-prompt label against the pooled label of the attributed texts and against each group's position. Bootstrap: 1,000 resamples of the texts, seed 42 (those of the existing tables). † = the model gave one label to every text (kappa set to 0). Group kappas are identical to Table 4 and Tables 16-18 (checked by the script). Kumar: the 65-attribution sample.
 
 ## 1. Kappa by dataset and characteristic
 
@@ -131,79 +131,79 @@ Cohen's kappa of the model's default-prompt label against the pooled label of th
 
 **gender**
 
-| model | pooled (n=10) | Female (n=10) | Male (n=10) |
+| model | pooled (n=50) | Female (n=50) | Male (n=50) |
 |---|---|---|---|
-| ChatGPT | -0.25 | 0.40 | -0.40 |
-| DeepSeek | -0.25 | 0.40 | -0.40 |
-| Gemini | 0.00 | 1.00 | -1.00 |
-| Mistral | -0.40 | 0.60 | -0.60 |
+| ChatGPT | 0.10 | 0.20 | -0.11 |
+| DeepSeek | 0.25 | 0.26 | -0.16 |
+| Gemini | 0.28 | 0.13 | -0.02 |
+| Mistral | 0.09 | 0.07 | -0.02 |
 
 **race**
 
-| model | pooled (n=15) | Asian (n=10) | Black (n=10) | White (n=10) |
+| model | pooled (n=92) | Asian (n=50) | Black (n=50) | White (n=84) |
 |---|---|---|---|---|
-| ChatGPT | 0.36 | 0.60 | 0.41 | -0.36 |
-| DeepSeek | 0.44 | 0.60 | 0.29 | -0.32 |
-| Gemini | -0.06 | 0.20 | 0.20 | -0.36 |
-| Mistral | 0.22 | 0.20 | -0.15 | 0.00 |
+| ChatGPT | 0.36 | 0.04 | 0.03 | 0.20 |
+| DeepSeek | 0.38 | 0.32 | -0.02 | 0.12 |
+| Gemini | 0.25 | 0.32 | -0.06 | 0.12 |
+| Mistral | 0.25 | 0.28 | 0.01 | 0.14 |
 
 **age**
 
-| model | pooled (n=15) | gen x+ (n=10) | gen z (n=10) | millenial (n=10) |
+| model | pooled (n=75) | gen x+ (n=50) | gen z (n=50) | millenial (n=50) |
 |---|---|---|---|---|
-| ChatGPT | 0.31 | -0.32 | 0.60 | -0.30 |
-| DeepSeek | 0.44 | 0.00† | 0.20 | 0.05 |
-| Gemini | 0.23 | 0.29 | 0.20 | 0.09 |
-| Mistral | 0.39 | 0.00 | 0.80 | -0.03 |
+| ChatGPT | 0.20 | 0.34 | 0.21 | 0.00 |
+| DeepSeek | 0.30 | 0.31 | 0.28 | 0.03 |
+| Gemini | 0.18 | 0.34 | 0.44 | -0.03 |
+| Mistral | 0.23 | 0.20 | 0.21 | 0.05 |
 
 **politics**
 
-| model | pooled (n=15) | conservative (n=10) | independent (n=10) | liberal (n=10) |
+| model | pooled (n=75) | conservative (n=50) | independent (n=50) | liberal (n=50) |
 |---|---|---|---|---|
-| ChatGPT | 0.47 | -0.09 | -0.07 | 1.00 |
-| DeepSeek | 0.17 | 0.07 | -0.40 | 0.78 |
-| Gemini | 0.47 | -0.09 | -0.07 | 1.00 |
-| Mistral | 0.36 | 0.05 | -0.07 | 0.80 |
+| ChatGPT | 0.39 | 0.11 | 0.28 | 0.26 |
+| DeepSeek | 0.45 | 0.06 | 0.33 | 0.40 |
+| Gemini | 0.45 | 0.02 | 0.33 | 0.43 |
+| Mistral | 0.21 | 0.05 | 0.17 | 0.11 |
 
 **religion**
 
-| model | pooled (n=10) | high (n=10) | not_high (n=10) |
+| model | pooled (n=50) | high (n=50) | not_high (n=50) |
 |---|---|---|---|
-| ChatGPT | 0.23 | -0.19 | 0.29 |
-| DeepSeek | 0.23 | -0.19 | 0.29 |
-| Gemini | 0.00 | -0.20 | 0.40 |
-| Mistral | 0.44 | -0.18 | 0.19 |
+| ChatGPT | 0.24 | -0.04 | 0.12 |
+| DeepSeek | 0.41 | -0.08 | 0.27 |
+| Gemini | 0.19 | -0.05 | 0.14 |
+| Mistral | 0.01 | -0.04 | 0.05 |
 
 ## 2. Kumar gender
 
 | model | pooled | female | male |
 |---|---|---|---|
-| ChatGPT | -0.25 | 0.40 | -0.40 |
-| DeepSeek | -0.25 | 0.40 | -0.40 |
-| Gemini | 0.00 | 1.00 | -1.00 |
-| Mistral | -0.40 | 0.60 | -0.60 |
+| ChatGPT | 0.10 | 0.20 | -0.11 |
+| DeepSeek | 0.25 | 0.26 | -0.16 |
+| Gemini | 0.28 | 0.13 | -0.02 |
+| Mistral | 0.09 | 0.07 | -0.02 |
 
 Pooled kappa with its bootstrap SD and 2.5-97.5 percentile range:
 
 | model | pooled kappa | SD | 2.5% | 97.5% |
 |---|---|---|---|---|
-| ChatGPT | -0.25 | 0.28 | -0.67 | 0.35 |
-| DeepSeek | -0.25 | 0.28 | -0.67 | 0.35 |
-| Gemini | 0.00 | 0.30 | -0.60 | 0.60 |
-| Mistral | -0.40 | 0.27 | -0.80 | 0.20 |
+| ChatGPT | 0.10 | 0.14 | -0.16 | 0.36 |
+| DeepSeek | 0.25 | 0.14 | -0.03 | 0.51 |
+| Gemini | 0.28 | 0.14 | 0.01 | 0.56 |
+| Mistral | 0.09 | 0.12 | -0.15 | 0.30 |
 
 ## 3. Counts over all datasets (model x characteristic cases; every characteristic has at least two groups)
 
 - cases: 72
-- pooled kappa strictly between the lowest and highest group kappa: 45
-- |pooled| < 0.2 while the group kappas differ by >= 0.5: 8
+- pooled kappa strictly between the lowest and highest group kappa: 36
+- |pooled| < 0.2 while the group kappas differ by >= 0.5: 4
 
 | dataset | cases | pooled strictly between | |pooled| < 0.2 and spread >= 0.5 |
 |---|---|---|---|
 | attitudes | 20 | 6 | 3 |
 | popquorn | 20 | 13 | 1 |
 | mhs | 12 | 9 | 0 |
-| kumar | 20 | 17 | 4 |
+| kumar | 20 | 8 | 0 |
 
 ## 4. Caveats and checks
 
@@ -216,7 +216,7 @@ Pooled ties resolved by the mean, per dataset (distinct attributed texts / attri
 | attitudes | 41 | 11 | 51 | 14 |
 | popquorn | 154 | 21 | 183 | 28 |
 | mhs | 95 | 91 | 105 | 100 |
-| kumar | 65 | 15 | 65 | 15 |
+| kumar | 340 | 85 | 342 | 85 |
 
 Per characteristic:
 
@@ -235,14 +235,14 @@ Per characteristic:
 | mhs | gender | 43 | 40 | 1 | 42 |
 | mhs | age | 30 | 30 | 0 | 30 |
 | mhs | ideology | 32 | 30 | 0 | 32 |
-| kumar | gender | 10 | 5 | 4 | 6 |
-| kumar | race | 15 | 4 | 3 | 12 |
-| kumar | age | 15 | 1 | 4 | 11 |
-| kumar | politics | 15 | 2 | 6 | 9 |
-| kumar | religion | 10 | 3 | 4 | 6 |
+| kumar | gender | 50 | 18 | 22 | 28 |
+| kumar | race | 92 | 22 | 30 | 62 |
+| kumar | age | 75 | 12 | 23 | 52 |
+| kumar | politics | 75 | 15 | 29 | 46 |
+| kumar | religion | 50 | 18 | 16 | 34 |
 
 - Pooled rows with a constant model label (kappa 0, †): 4 of 72.
-- Group rows with a constant model label: 12 of 176.
+- Group rows with a constant model label: 11 of 176.
 - Cases where the pooled label is the same for every attributed text of the characteristic (pooled kappa is then 0 by construction): mhs/age, mhs/ideology.
 - Datasets where most pooled labels are decided by the mean (exact tie between toxic and civil ratings): mhs (91 of 95 texts). There the pooled label is mostly a mean-threshold decision.
 - Share of texts where the pooled label equals the group position: column `share_pooled_equals_group` of the csv.

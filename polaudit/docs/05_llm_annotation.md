@@ -3,7 +3,7 @@
 You bring the **prompt** and the **models**; the package batches the texts, calls the model, retries, parses and saves every answer so a run can be resumed.
 
 ```python
-from polalign import ModelHub, annotate, load_model_inputs
+from polaudit import ModelHub, annotate, load_model_inputs
 
 inputs = load_model_inputs("results/aposteriori_for_models.csv")     # the attributed texts, written by save_au_tables
 hub = ModelHub.from_env()                                            # keys from your .env, see reference.md
@@ -18,7 +18,7 @@ annotate(hub["chatgpt"], inputs, "results", prompt=my_prompt, run="baseline")
 - **Your model.** `ModelHub` has ChatGPT, DeepSeek, Gemini and Mistral by default. A `ModelConfig` adds any OpenAI-compatible endpoint, Gemini, or your own `Provider`.
 - **Safe to rerun.** Finished batches are kept; a batch whose reply has the wrong number of scores is asked again twice and then raises `AnnotationError`. No answer is guessed.
 - **Persona prompting (SCD).** `annotate_personas` asks the model to answer as a member of each group of a characteristic, with your own `prompt(text, item, dimension, groups)`.
-- **A free stand-in.** `polalign.toy.standin_model()` answers without any API. The notebook uses it.
+- **A free stand-in.** `polaudit.toy.standin_model()` answers without any API. The notebook uses it.
 
 Everything is saved as `results/<dataset>/<run>/<model>.csv` and a raw copy of every reply in `raw/`, plus `run_log.csv`. The providers' answers do not carry a model version: write
 the model id and the date down in your own notes.

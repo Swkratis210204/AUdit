@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from polalign import DatasetSpec, run_dataset
+from polaudit import DatasetSpec, run_dataset
 
 RAW = pd.DataFrame([{"item_id": "a", "text": "one two", "rating": r, "sex": s} for r, s in [(1, "m")] * 3 + [(5, "f")] * 3]
                    + [{"item_id": "b", "text": "three", "rating": 3, "sex": s} for s in "mmfff"])

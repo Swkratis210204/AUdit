@@ -4,7 +4,7 @@ import json
 import pandas as pd
 import pytest
 
-from polalign import DatasetSpec, run_dataset
+from polaudit import DatasetSpec, run_dataset
 from paper.au_total import save_total_au
 from paper.au_total import (au_dimension_overlap, au_groups, au_label_patterns, au_models_input, au_summary)
 

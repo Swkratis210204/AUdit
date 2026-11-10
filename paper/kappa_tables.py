@@ -11,7 +11,7 @@ import pandas as pd
 
 from .eda_total import DATASET_LABEL
 
-from polalign.names import MODEL_NAME      # noqa: E402,F401
+from polaudit.names import MODEL_NAME      # noqa: E402,F401
 PROMPT_NAME = {"baseline": "Baseline", "scd": "SCD"}
 TOXIC_SHARE_DATASETS = ("mhs", "attitudes")                  # the datasets where the models give almost one label to every text
 GROUP_NAME = {"millenial": "millennial"}                    # the spelling of the data is corrected in the tables

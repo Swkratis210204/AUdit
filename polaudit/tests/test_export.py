@@ -2,7 +2,7 @@
 import pandas as pd
 import pytest
 
-from polalign import read_au_csv, save_au_tables
+from polaudit import read_au_csv, save_au_tables
 
 
 def au_table(dataset, n_per_dimension, dimensions=("gender", "age")):

@@ -30,7 +30,7 @@ every possible way (group sizes fixed, each assignment once, the observed one le
 attributes by chance. It is exact: nothing is drawn at random.
 
 ```python
-from polalign import attribution_gap, compute_null
+from polaudit import attribution_gap, compute_null
 
 attribution_gap({"mydata": result}, reps=10_000)
 compute_null({"mydata": result})                    # exclude_observed=False to keep the observed assignment

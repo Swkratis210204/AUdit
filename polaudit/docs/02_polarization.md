@@ -6,7 +6,7 @@ A text is **polarized** when its ratings are not unimodal. We measure this with 
 histogram of ratings, larger for a more split one. A text with DFU above the `tolerance` (default 0) is polarized.
 
 ```python
-from polalign import Unimodality
+from polaudit import Unimodality
 
 tool = Unimodality()                       # scale 1-5
 tool.dfu([1, 1, 2, 5, 5, 4])               # polarized: > 0

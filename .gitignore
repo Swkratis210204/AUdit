@@ -37,3 +37,7 @@ dist/
 
 # raw datasets stay local
 datasets/
+fixes/
+new_draft/
+logs
+test.tex

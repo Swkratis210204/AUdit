@@ -7,7 +7,7 @@ Nothing here asks a model for anything: it reads the AU results and the labels t
 ## Definitions
 
 - **Attributed texts**: the AU rows (text x characteristic) of the final AU results, after the removal of groups in fewer than 10 AU texts (those groups stay
-  removed). **Kumar** was evaluated on a sample of 65 rows, so only those rows are used for Kumar (13 groups x 10).
+  removed). **Kumar** was evaluated on a sample of 342 rows (every group at least 50 times), so only those rows are used for Kumar.
 - **Group position** of a text: the group's label in the AU results: the majority of the binary labels of its ratings (a rating of 3 or more is toxic), an exact
   tie decided by the group's mean rating (3 or more is toxic). For **MHS** the humans' scale is 1-3, so only a rating of 3 ("Yes") is toxic, and the tie rule uses the
   mean on that scale; the models rate 1-5 and are binarized at 3 like every other dataset.
@@ -16,7 +16,7 @@ Nothing here asks a model for anything: it reads the AU results and the labels t
   and `constant_model = True` (also inside a resample). `constant_group` flags a group whose position is the same in all its texts.
 - **small_n**: the characteristic has fewer than 10 attributed texts (Attitudes age and traditionalism; these characteristics stay in).
 - **se**: the standard error, the standard deviation (ddof = 1) of the bootstrap values of that quantity over the valid resamples (the same resamples as the percentiles).
-- **Bootstrap**: the attributed texts of a characteristic are resampled with replacement 10,000 times (seed 42); every group, model and prompt is recomputed on the same
+- **Bootstrap**: the attributed texts of a characteristic are resampled with replacement 1,000 times (seed 42); every group, model and prompt is recomputed on the same
   resamples. `ci_low` and `ci_high` are the 2.5th and 97.5th percentiles. A resample in which a group has no text has no kappa: it is counted in
   `resamples_without_value` and left out of the percentiles.
 

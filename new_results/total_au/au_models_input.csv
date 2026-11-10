@@ -30,16 +30,16 @@ mhs,age,millenial,30,50.0,30,50.0
 mhs,ideology,conservative,22,34.4,22,34.4
 mhs,ideology,liberal,29,45.3,29,45.3
 mhs,ideology,neutral,13,20.3,13,20.3
-kumar,gender,Female,1224,50.0,10,50.0
-kumar,gender,Male,1224,50.0,10,50.0
-kumar,race,Asian,83,6.2,10,33.3
-kumar,race,Black,592,44.4,10,33.3
-kumar,race,White,659,49.4,10,33.3
-kumar,age,gen x+,880,42.4,10,33.3
-kumar,age,gen z,243,11.7,10,33.3
-kumar,age,millenial,953,45.9,10,33.3
-kumar,politics,conservative,1228,31.9,10,33.3
-kumar,politics,independent,1143,29.7,10,33.3
-kumar,politics,liberal,1477,38.4,10,33.3
-kumar,religion,high,1237,50.0,10,50.0
-kumar,religion,not_high,1237,50.0,10,50.0
+kumar,gender,Female,1224,50.0,50,50.0
+kumar,gender,Male,1224,50.0,50,50.0
+kumar,race,Asian,83,6.2,50,27.2
+kumar,race,Black,592,44.4,50,27.2
+kumar,race,White,659,49.4,84,45.7
+kumar,age,gen x+,880,42.4,50,33.3
+kumar,age,gen z,243,11.7,50,33.3
+kumar,age,millenial,953,45.9,50,33.3
+kumar,politics,conservative,1228,31.9,50,33.3
+kumar,politics,independent,1143,29.7,50,33.3
+kumar,politics,liberal,1477,38.4,50,33.3
+kumar,religion,high,1237,50.0,50,50.0
+kumar,religion,not_high,1237,50.0,50,50.0

@@ -7,7 +7,7 @@ On every attributed text each group has a **position** (toxic or civil: the majo
 
 ```python
 import pandas as pd
-from polalign import compute_kappa, compute_poles
+from polaudit import compute_kappa, compute_poles
 
 given = pd.read_csv("results/aposteriori_for_models.csv", dtype={"item_id": str})     # the texts given to the models
 kappa = compute_kappa({"mydata": result}, "results", given, reps=1_000, seed=42, prompt="baseline")

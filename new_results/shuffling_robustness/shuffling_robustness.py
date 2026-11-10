@@ -1,4 +1,4 @@
-"""Exact permutation null for the attribution rates and the demographic / non-demographic gap (section 7.7). The logic is in ``polalign/shuffling_robustness.py``.
+"""Exact permutation null for the attribution rates and the demographic / non-demographic gap (section 7.7). The logic is in ``polaudit/shuffling_robustness.py``.
 
 Run from the repository root:  python new_results/shuffling_robustness/shuffling_robustness.py
 Output (next to this script): attribution_null_per_characteristic.csv, attribution_null_gap.csv, per_pair_chance_probability.csv, summary.md
@@ -8,9 +8,9 @@ import sys
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(root / "polalign" / "src"))     # works without installing the package
+sys.path.insert(0, str(root / "polaudit" / "src"))     # works without installing the package
 
-from polalign import compute_null, load_results, save_null
+from polaudit import compute_null, load_results, save_null
 
 if __name__ == "__main__":
     tables = compute_null(load_results(), reps=10_000, seed=42, exclude_observed=True)

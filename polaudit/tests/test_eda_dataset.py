@@ -1,7 +1,7 @@
 """Tests of the description of the dataset itself (annotators, group mapping, dataset info), on a tiny made-up dataset."""
 import pandas as pd
 
-from polalign import DatasetSpec, dataset_tables, eda_overview_all, run_dataset, save_dataset_eda
+from polaudit import DatasetSpec, dataset_tables, eda_overview_all, run_dataset, save_dataset_eda
 
 
 def toy(annotator_column="rater"):
@@ -35,7 +35,7 @@ def test_without_an_annotator_id_nothing_is_invented():
 
 
 def test_groups_annotators_has_the_rows_of_groups_csv():
-    from polalign import eda_tables
+    from polaudit import eda_tables
     result = toy()
     both = dataset_tables(result)["groups_annotators"]
     assert both["annotators"].to_dict() == {("gender", "man"): 3, ("gender", "woman"): 4}       # r1 counts in both groups
@@ -55,7 +55,7 @@ def test_group_mapping_shows_every_raw_value():
 def test_a_numeric_attribute_with_many_values_is_shown_as_a_range_per_group():
     ages = list(range(18, 70))                                                    # 52 different ages
     raw = pd.DataFrame({"item_id": ["a"] * len(ages), "text": "t", "rating": 1, "age": ages})
-    from polalign.datasets.groups import age_generations
+    from polaudit.datasets.groups import age_generations
     spec = DatasetSpec(name="toy", load=lambda root: raw, dimensions={"age": ("age", age_generations)}, min_au_texts=1)
     mapping = dataset_tables(run_dataset(spec, raw=raw))["group_mapping"].set_index("mapped group")
     assert len(mapping) == 3 and mapping.loc["gen z", "raw value"] == "18 to 24" and mapping.loc["gen x+", "raw value"] == "45 to 69"

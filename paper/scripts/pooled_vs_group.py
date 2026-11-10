@@ -3,8 +3,8 @@
 For every model and characteristic: Cohen's kappa of the model's DEFAULT-prompt label against the POOLED label (all ratings of a text after the
 preprocessing) next to the kappa against each group's position, on the attributed (AU) texts of the paper's alignment tables (Table 4, 16-18).
 
-Everything is reused from ``polalign.kappa_groups`` (attributed rows, model labels, per-characteristic arrays, the vectorised kappa, the
-resampling with seed 42 and 10,000 resamples) and ``Unimodality.label_info`` (the label rule: majority, an exact tie decided by the mean).
+Everything is reused from ``polaudit.kappa_groups`` (attributed rows, model labels, per-characteristic arrays, the vectorised kappa, the
+resampling with seed 42 and 1,000 resamples, as in the kappa tables) and ``Unimodality.label_info`` (the label rule: majority, an exact tie decided by the mean).
 The group kappas are checked against ``new_results/kappa/default/kappa_by_group.csv``; any difference stops the script before anything is written.
 
 Run from the repository root:  python paper/scripts/pooled_vs_group.py
@@ -18,14 +18,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "polalign" / "src"))     # works without installing the package
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "polaudit" / "src"))     # works without installing the package
 
-from polalign import find_root, load_results
-from polalign.names import ordered_datasets as _ordered
-from polalign.kappa_groups import (MODELS, _attributed_rows, _block, _interval, _kappa, _model_labels, _r, _se)
-from polalign.persona_annotation import collect_persona_runs
+from polaudit import find_root, load_results
+from polaudit.names import ordered_datasets as _ordered
+from polaudit.kappa_groups import (MODELS, _attributed_rows, _block, _interval, _kappa, _model_labels, _r, _se)
+from polaudit.persona_annotation import collect_persona_runs
 
-REPS, SEED = 10_000, 42
+REPS, SEED = 1_000, 42          # the same resamples as the kappa tables (Datasets.ipynb 7.2), so the group rows match them exactly
 MODEL_NAME = {"chatgpt": "ChatGPT", "deepseek": "DeepSeek", "gemini": "Gemini", "mistral": "Mistral"}
 DAGGER = "†"
 

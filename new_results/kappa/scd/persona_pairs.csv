@@ -103,47 +103,47 @@ mhs,gemini,ideology,liberal,neutral,10,0.0,0.0,0.0,0.0,True
 mhs,mistral,ideology,conservative,liberal,19,-0.0755,0.0544,-0.1739,0.0,False
 mhs,mistral,ideology,conservative,neutral,3,0.0,0.0,0.0,0.0,True
 mhs,mistral,ideology,liberal,neutral,10,0.0,0.0,0.0,0.0,True
-kumar,chatgpt,gender,Female,Male,10,1.0,0.0791,1.0,1.0,False
-kumar,deepseek,gender,Female,Male,10,1.0,0.0791,1.0,1.0,False
-kumar,gemini,gender,Female,Male,10,1.0,0.1609,0.0,1.0,False
-kumar,mistral,gender,Female,Male,10,0.4,0.2418,0.0,1.0,False
-kumar,chatgpt,race,Asian,Black,5,1.0,0.3538,0.0,1.0,False
-kumar,chatgpt,race,Asian,White,5,1.0,0.3561,0.0,1.0,False
-kumar,chatgpt,race,Black,White,5,1.0,0.4795,0.0,1.0,False
-kumar,deepseek,race,Asian,Black,5,1.0,0.351,0.0,1.0,False
-kumar,deepseek,race,Asian,White,5,0.6154,0.3744,0.0,1.0,False
-kumar,deepseek,race,Black,White,5,0.0,0.0,0.0,0.0,True
-kumar,gemini,race,Asian,Black,5,1.0,0.3484,0.0,1.0,False
-kumar,gemini,race,Asian,White,5,1.0,0.4799,0.0,1.0,False
-kumar,gemini,race,Black,White,5,1.0,0.4795,0.0,1.0,False
-kumar,mistral,race,Asian,Black,5,0.0,0.0,0.0,0.0,True
-kumar,mistral,race,Asian,White,5,0.1667,0.412,-0.6,1.0,False
-kumar,mistral,race,Black,White,5,1.0,0.482,0.0,1.0,False
-kumar,chatgpt,age,gen x+,gen z,5,-0.25,0.2009,-0.6667,0.0,False
-kumar,chatgpt,age,gen x+,millenial,5,-0.4286,0.3185,-1.0,0.0,False
-kumar,chatgpt,age,gen z,millenial,5,0.0,0.0,0.0,0.0,True
-kumar,deepseek,age,gen x+,gen z,5,-0.25,0.2002,-0.6667,0.0,False
-kumar,deepseek,age,gen x+,millenial,5,-0.3636,0.2677,-0.9231,0.0,False
-kumar,deepseek,age,gen z,millenial,5,0.0,0.0,0.0,0.0,True
-kumar,gemini,age,gen x+,gen z,5,0.0,0.0,0.0,0.0,True
-kumar,gemini,age,gen x+,millenial,5,1.0,0.4798,0.0,1.0,False
-kumar,gemini,age,gen z,millenial,5,0.0,0.0,0.0,0.0,True
-kumar,mistral,age,gen x+,gen z,5,-0.25,0.2014,-0.6667,0.0,False
-kumar,mistral,age,gen x+,millenial,5,-0.25,0.1986,-0.6154,0.0,False
-kumar,mistral,age,gen z,millenial,5,0.0,0.0,0.0,0.0,True
-kumar,chatgpt,politics,conservative,independent,5,-0.25,0.198,-0.6154,0.0,False
-kumar,chatgpt,politics,conservative,liberal,5,0.1667,0.4181,-0.6667,1.0,False
-kumar,chatgpt,politics,independent,liberal,5,0.5455,0.3923,0.0,1.0,False
-kumar,deepseek,politics,conservative,independent,5,0.5455,0.3956,0.0,1.0,False
-kumar,deepseek,politics,conservative,liberal,5,0.5455,0.3982,0.0,1.0,False
-kumar,deepseek,politics,independent,liberal,5,1.0,0.3539,0.0,1.0,False
-kumar,gemini,politics,conservative,independent,5,0.6154,0.3735,0.0,1.0,False
-kumar,gemini,politics,conservative,liberal,5,1.0,0.3522,0.0,1.0,False
-kumar,gemini,politics,independent,liberal,5,1.0,0.3539,0.0,1.0,False
-kumar,mistral,politics,conservative,independent,5,0.0,0.0,0.0,0.0,True
-kumar,mistral,politics,conservative,liberal,5,1.0,0.3499,0.0,1.0,False
-kumar,mistral,politics,independent,liberal,5,0.0,0.0,0.0,0.0,True
-kumar,chatgpt,religion,high,not_high,10,0.4118,0.3218,0.0,1.0,False
-kumar,deepseek,religion,high,not_high,10,0.2,0.1993,0.0,0.6154,False
-kumar,gemini,religion,high,not_high,10,1.0,0.1749,0.0,1.0,False
-kumar,mistral,religion,high,not_high,10,0.0541,0.078,0.0,0.2857,False
+kumar,chatgpt,gender,Female,Male,50,0.9049,0.0683,0.7495,1.0,False
+kumar,deepseek,gender,Female,Male,50,0.958,0.0422,0.8649,1.0,False
+kumar,gemini,gender,Female,Male,50,1.0,0.0,1.0,1.0,False
+kumar,mistral,gender,Female,Male,50,0.6678,0.17,0.2857,0.9292,False
+kumar,chatgpt,race,Asian,Black,8,0.75,0.2898,0.0,1.0,False
+kumar,chatgpt,race,Asian,White,42,1.0,0.0,1.0,1.0,False
+kumar,chatgpt,race,Black,White,42,0.8931,0.0755,0.72,1.0,False
+kumar,deepseek,race,Asian,Black,8,1.0,0.1828,0.0,1.0,False
+kumar,deepseek,race,Asian,White,42,0.9489,0.0522,0.8247,1.0,False
+kumar,deepseek,race,Black,White,42,1.0,0.01,1.0,1.0,False
+kumar,gemini,race,Asian,Black,8,1.0,0.2243,0.0,1.0,False
+kumar,gemini,race,Asian,White,42,1.0,0.0,1.0,1.0,False
+kumar,gemini,race,Black,White,42,0.932,0.0739,0.7586,1.0,False
+kumar,mistral,race,Asian,Black,8,0.0,0.0,0.0,0.0,True
+kumar,mistral,race,Asian,White,42,0.2868,0.1784,-0.0804,0.625,False
+kumar,mistral,race,Black,White,42,0.2602,0.162,-0.0714,0.5639,False
+kumar,chatgpt,age,gen x+,gen z,25,0.43,0.1692,0.0909,0.7492,False
+kumar,chatgpt,age,gen x+,millenial,25,0.5161,0.1773,0.127,0.8298,False
+kumar,chatgpt,age,gen z,millenial,25,0.6057,0.1588,0.2667,0.9,False
+kumar,deepseek,age,gen x+,gen z,25,0.3323,0.1571,0.0303,0.6489,False
+kumar,deepseek,age,gen x+,millenial,25,0.6753,0.1566,0.3304,0.9222,False
+kumar,deepseek,age,gen z,millenial,25,0.6154,0.1444,0.3284,0.8939,False
+kumar,gemini,age,gen x+,gen z,25,0.6888,0.1808,0.2748,1.0,False
+kumar,gemini,age,gen x+,millenial,25,0.9196,0.0819,0.7273,1.0,False
+kumar,gemini,age,gen z,millenial,25,0.9201,0.0813,0.7327,1.0,False
+kumar,mistral,age,gen x+,gen z,25,0.0351,0.1924,-0.3306,0.4167,False
+kumar,mistral,age,gen x+,millenial,25,-0.129,0.0692,-0.2557,0.0,False
+kumar,mistral,age,gen z,millenial,25,0.2574,0.2275,-0.1765,0.6888,False
+kumar,chatgpt,politics,conservative,independent,25,0.0625,0.1895,-0.3125,0.4342,False
+kumar,chatgpt,politics,conservative,liberal,25,0.359,0.1888,-0.0365,0.7089,False
+kumar,chatgpt,politics,independent,liberal,25,0.7541,0.1393,0.4417,1.0,False
+kumar,deepseek,politics,conservative,independent,25,0.5192,0.1739,0.146,0.8276,False
+kumar,deepseek,politics,conservative,liberal,25,0.5734,0.1605,0.2432,0.88,False
+kumar,deepseek,politics,independent,liberal,25,0.9196,0.0845,0.7143,1.0,False
+kumar,gemini,politics,conservative,independent,25,0.6324,0.178,0.234,0.9155,False
+kumar,gemini,politics,conservative,liberal,25,0.5098,0.1551,0.2105,0.8108,False
+kumar,gemini,politics,independent,liberal,25,0.8333,0.1223,0.5532,1.0,False
+kumar,mistral,politics,conservative,independent,25,0.4048,0.2622,-0.125,0.8372,False
+kumar,mistral,politics,conservative,liberal,25,-0.0593,0.169,-0.3465,0.3056,False
+kumar,mistral,politics,independent,liberal,25,0.8031,0.1454,0.4595,1.0,False
+kumar,chatgpt,religion,high,not_high,50,0.1964,0.1343,-0.0709,0.4554,False
+kumar,deepseek,religion,high,not_high,50,0.2857,0.1179,0.0573,0.5192,False
+kumar,gemini,religion,high,not_high,50,1.0,0.0,1.0,1.0,False
+kumar,mistral,religion,high,not_high,50,-0.1153,0.0738,-0.2797,0.0066,False

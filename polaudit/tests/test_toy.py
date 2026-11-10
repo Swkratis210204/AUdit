@@ -1,8 +1,8 @@
 """The toy dataset and the stand-in model of the tutorials: the planted structure must be found."""
 import pandas as pd
 
-from polalign import annotate, run_dataset, save_au_tables, load_model_inputs
-from polalign.toy import standin_model, toy_ratings, toy_spec
+from polaudit import annotate, run_dataset, save_au_tables, load_model_inputs
+from polaudit.toy import standin_model, toy_ratings, toy_spec
 
 
 def test_toy_attributes_the_planted_characteristics_only():
@@ -20,7 +20,7 @@ def test_standin_model_runs_without_any_api(tmp_path):
 
 
 def test_compare_prompts_sees_a_change_of_information_but_not_of_wording(tmp_path):
-    from polalign import compare_prompts
+    from polaudit import compare_prompts
 
     result = run_dataset(toy_spec(), raw=toy_ratings())
     save_au_tables({"toy": result.au}, tmp_path)
@@ -34,7 +34,7 @@ def test_compare_prompts_sees_a_change_of_information_but_not_of_wording(tmp_pat
 
 
 def test_the_rules_of_the_analysis_are_parameters():
-    from polalign import attribution_gap
+    from polaudit import attribution_gap
 
     raw = toy_ratings()
     default = run_dataset(toy_spec(min_au_texts=25), raw=raw)

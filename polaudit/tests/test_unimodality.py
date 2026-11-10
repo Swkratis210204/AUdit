@@ -4,7 +4,7 @@ from collections import Counter
 import numpy as np
 import pytest
 
-from polalign import Unimodality
+from polaudit import Unimodality
 
 
 def dfu_thesis(scores, scale):

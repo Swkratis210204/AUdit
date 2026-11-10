@@ -23,9 +23,9 @@ from typing import Dict
 import numpy as np
 import pandas as pd
 
-from polalign.eda import eda_tables, _texts
+from polaudit.eda import eda_tables, _texts
 from .eda_total import BLUE, DATASET_COLOR, DATASET_LABEL, RED, _ordered, _panels
-from polalign.pipeline import DatasetResult
+from polaudit.pipeline import DatasetResult
 
 __all__ = ["dfu_text_table", "dfu_summary", "dfu_histogram", "dfu_by_ratings_per_text", "dfu_group_level", "dfu_pairwise_ks", "save_total_dfu"]
 

@@ -30,16 +30,16 @@ mhs,age,millenial,30,0.2667,0.7333,0.0807,0.1333,0.4333
 mhs,ideology,conservative,21,0.7143,0.2857,0.1,0.5,0.9
 mhs,ideology,liberal,28,0.4286,0.5714,0.093,0.25,0.6129
 mhs,ideology,neutral,11,0.2727,0.7273,0.1382,0.0,0.5556
-kumar,gender,Female,10,0.5,0.5,0.1583,0.2,0.8
-kumar,gender,Male,10,0.5,0.5,0.1583,0.2,0.8
-kumar,race,Asian,5,0.4,0.6,0.2399,0.0,1.0
-kumar,race,Black,6,1.0,0.0,0.0,1.0,1.0
-kumar,race,White,9,0.2222,0.7778,0.1422,0.0,0.5
-kumar,age,gen x+,2,0.5,0.5,0.3782,0.0,1.0
-kumar,age,gen z,5,0.8,0.2,0.1941,0.3333,1.0
-kumar,age,millenial,5,0.2,0.8,0.1961,0.0,0.6667
-kumar,politics,conservative,9,0.6667,0.3333,0.1614,0.3333,1.0
-kumar,politics,independent,6,0.1667,0.8333,0.1621,0.0,0.5
-kumar,politics,liberal,7,0.5714,0.4286,0.1968,0.1667,1.0
-kumar,religion,high,9,0.8889,0.1111,0.1051,0.6667,1.0
-kumar,religion,not_high,9,0.1111,0.8889,0.1051,0.0,0.3333
+kumar,gender,Female,47,0.3191,0.6809,0.0682,0.1875,0.4583
+kumar,gender,Male,47,0.6809,0.3191,0.0682,0.5417,0.8125
+kumar,race,Asian,29,0.5862,0.4138,0.0942,0.4,0.7714
+kumar,race,Black,40,0.975,0.025,0.0249,0.9167,1.0
+kumar,race,White,65,0.1692,0.8308,0.0469,0.0806,0.2667
+kumar,age,gen x+,30,0.5667,0.4333,0.0908,0.3889,0.7407
+kumar,age,gen z,22,0.4091,0.5909,0.1067,0.2083,0.625
+kumar,age,millenial,34,0.5,0.5,0.0852,0.3333,0.6667
+kumar,politics,conservative,33,0.7879,0.2121,0.0725,0.6364,0.9211
+kumar,politics,independent,27,0.2963,0.7037,0.0904,0.125,0.48
+kumar,politics,liberal,24,0.3333,0.6667,0.099,0.1481,0.5357
+kumar,religion,high,48,0.8958,0.1042,0.0445,0.7999,0.9787
+kumar,religion,not_high,48,0.1042,0.8958,0.0445,0.0213,0.2001

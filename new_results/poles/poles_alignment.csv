@@ -63,27 +63,27 @@ mhs,all (distinct texts),chatgpt,95,94,1,88,6,0.9362,0.0251,0.883,0.9789,0.0,Fal
 mhs,all (distinct texts),deepseek,95,94,1,92,2,0.9787,0.0148,0.9468,1.0,1.0,False
 mhs,all (distinct texts),gemini,95,94,1,92,2,0.9787,0.0148,0.9468,1.0,0.0,False
 mhs,all (distinct texts),mistral,95,94,1,91,3,0.9681,0.0182,0.9263,1.0,1.0,False
-kumar,gender,chatgpt,10,10,0,4,6,0.4,0.1552,0.1,0.7,,False
-kumar,gender,deepseek,10,10,0,4,6,0.4,0.1552,0.1,0.7,,False
-kumar,gender,gemini,10,10,0,5,5,0.5,0.1583,0.2,0.8,,False
-kumar,gender,mistral,10,10,0,5,5,0.5,0.1589,0.2,0.8,,False
-kumar,race,chatgpt,15,10,5,5,5,0.5,0.1617,0.2,0.8182,0.6,False
-kumar,race,deepseek,15,10,5,4,6,0.4,0.1592,0.1,0.7143,0.6,False
-kumar,race,gemini,15,10,5,5,5,0.5,0.1617,0.2,0.8182,0.2,False
-kumar,race,mistral,15,10,5,6,4,0.6,0.1585,0.2857,0.9,0.8,False
-kumar,age,chatgpt,15,6,9,3,3,0.5,0.2165,0.0,1.0,0.4444,False
-kumar,age,deepseek,15,6,9,3,3,0.5,0.2179,0.0,1.0,0.0,False
-kumar,age,gemini,15,6,9,5,1,0.8333,0.1599,0.5,1.0,0.6667,False
-kumar,age,mistral,15,6,9,4,2,0.6667,0.2037,0.25,1.0,0.5556,False
-kumar,politics,chatgpt,15,11,4,7,4,0.6364,0.1472,0.3333,0.9091,0.25,False
-kumar,politics,deepseek,15,11,4,6,5,0.5455,0.1519,0.25,0.8333,0.0,False
-kumar,politics,gemini,15,11,4,7,4,0.6364,0.1472,0.3333,0.9091,0.25,False
-kumar,politics,mistral,15,11,4,8,3,0.7273,0.1353,0.4444,1.0,0.25,False
-kumar,religion,chatgpt,10,9,1,5,4,0.5556,0.1648,0.2222,0.8889,1.0,False
-kumar,religion,deepseek,10,9,1,5,4,0.5556,0.1648,0.2222,0.8889,1.0,False
-kumar,religion,gemini,10,9,1,4,5,0.4444,0.1667,0.1111,0.7778,1.0,False
-kumar,religion,mistral,10,9,1,6,3,0.6667,0.1567,0.3333,1.0,1.0,False
-kumar,all (distinct texts),chatgpt,65,46,19,24,22,0.5217,0.0728,0.3778,0.66,0.4737,False
-kumar,all (distinct texts),deepseek,65,46,19,22,24,0.4783,0.0726,0.34,0.619,0.2105,False
-kumar,all (distinct texts),gemini,65,46,19,26,20,0.5652,0.0717,0.4222,0.7045,0.4737,False
-kumar,all (distinct texts),mistral,65,46,19,29,17,0.6304,0.0706,0.4898,0.766,0.5789,False
+kumar,gender,chatgpt,50,47,3,26,21,0.5532,0.0732,0.4091,0.6957,1.0,False
+kumar,gender,deepseek,50,47,3,24,23,0.5106,0.0736,0.3673,0.6531,1.0,False
+kumar,gender,gemini,50,47,3,23,24,0.4894,0.0736,0.3478,0.6327,1.0,False
+kumar,gender,mistral,50,47,3,33,14,0.7021,0.0667,0.5682,0.8298,1.0,False
+kumar,race,chatgpt,92,67,25,33,34,0.4925,0.061,0.3714,0.6094,0.48,False
+kumar,race,deepseek,92,67,25,23,44,0.3433,0.0576,0.2308,0.4559,0.44,False
+kumar,race,gemini,92,67,25,31,36,0.4627,0.0617,0.3429,0.5833,0.4,False
+kumar,race,mistral,92,67,25,44,23,0.6567,0.0584,0.5373,0.7667,0.64,False
+kumar,age,chatgpt,75,43,32,23,20,0.5349,0.0771,0.381,0.6829,0.3438,False
+kumar,age,deepseek,75,43,32,18,25,0.4186,0.0759,0.2708,0.5682,0.25,False
+kumar,age,gemini,75,43,32,26,17,0.6047,0.0746,0.4595,0.75,0.2812,False
+kumar,age,mistral,75,43,32,29,14,0.6744,0.0713,0.5333,0.8095,0.4688,False
+kumar,politics,chatgpt,75,42,33,25,17,0.5952,0.076,0.4419,0.7429,0.3939,False
+kumar,politics,deepseek,75,42,33,22,20,0.5238,0.077,0.3721,0.6744,0.3333,False
+kumar,politics,gemini,75,42,33,22,20,0.5238,0.077,0.3721,0.6744,0.3333,False
+kumar,politics,mistral,75,42,33,31,11,0.7381,0.0679,0.5952,0.8636,0.6061,False
+kumar,religion,chatgpt,50,48,2,23,25,0.4792,0.072,0.3404,0.62,1.0,False
+kumar,religion,deepseek,50,48,2,15,33,0.3125,0.0669,0.1837,0.4468,1.0,False
+kumar,religion,gemini,50,48,2,22,26,0.4583,0.0722,0.3191,0.6,1.0,False
+kumar,religion,mistral,50,48,2,35,13,0.7292,0.0647,0.6,0.8542,1.0,False
+kumar,all (distinct texts),chatgpt,340,245,95,130,115,0.5306,0.0314,0.4686,0.5915,0.4316,False
+kumar,all (distinct texts),deepseek,340,245,95,102,143,0.4163,0.0312,0.3563,0.4777,0.3684,False
+kumar,all (distinct texts),gemini,340,245,95,124,121,0.5061,0.0317,0.4444,0.5685,0.3684,False
+kumar,all (distinct texts),mistral,340,245,95,170,75,0.6939,0.0292,0.6352,0.75,0.5895,False

@@ -18,7 +18,7 @@ result.groups                # ratings per group after the cleaning
 ## Your own dataset
 
 ```python
-from polalign import DatasetSpec
+from polaudit import DatasetSpec
 
 spec = DatasetSpec(
     name="mydata",
@@ -32,6 +32,6 @@ spec = DatasetSpec(
 ```
 
 A mapping can also be a function when the groups come from a number (an age, for example). The four datasets of the paper (POPQUORN, Attitudes, MHS, Kumar) are
-in `polalign.SPECS`; their raw files are not shipped, see [reference.md](reference.md#data).
+in `polaudit.SPECS`; their raw files are not shipped, see [reference.md](reference.md#data).
 
 **Notebook:** [01_data.ipynb](../notebooks/01_data.ipynb)
